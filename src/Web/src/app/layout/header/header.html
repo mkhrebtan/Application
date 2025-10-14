@@ -1,0 +1,52 @@
+﻿<div class="p-5 grid grid-cols-3 items-center border-b border-gray-200">
+  <nav class="col-start-2 flex justify-center">
+    <div
+      class="border-1 border-gray-300 rounded-4xl backdrop-blur-md p-1 flex shadow-sm"
+    >
+      <button
+        [class.active]="true"
+        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+                    hover:-translate-y-px [&.active]:hover:translate-none [&.active]:bg-gray-200 hover:text-black [&.active]:text-black"
+      >
+        <fa-icon [icon]="faListUl" />
+        <span>Events</span>
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+                    hover:-translate-y-px [&.active]:hover:translate-none hover:text-black [&.active]:bg-gray-200 [&.active]:text-black"
+      >
+        <fa-icon [icon]="faCalendar" />
+        <span>My Events</span>
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+                    hover:-translate-y-px [&.active]:hover:translate-none hover:text-black [&.active]:bg-gray-200 [&.active]:text-black"
+      >
+        <fa-icon [icon]="faPlus" />
+        <span>Create Event</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="col-start-3 flex justify-center">
+    <div
+      class="flex justify-center h-full border border-gray-300 rounded-4xl backdrop-blur-md p-1 shadow-sm"
+    >
+      <button
+        class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
+                    hover:bg-gray-200"
+      >
+        <span>Sign In</span>
+      </button>
+      <div class="w-px m-1 bg-gray-400 opacity-30"></div>
+      <button
+        class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
+                     hover:bg-gray-200"
+      >
+        <span>Register</span>
+      </button>
+    </div>
+  </div>
+</div>
