@@ -1,107 +1,125 @@
 import { Component, signal } from '@angular/core';
-import { faTableCells, faListUl, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faTableCellsLarge, faListUl, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { EventFilter } from '../../features/event/models/event-filter';
+import { EventListingView } from '../../features/event/models/event-listing-view';
+import { IEvent } from '../../features/event/models/event';
+import { EventListingCard } from '../../features/event/event-listing-card/event-listing-card';
 
 @Component({
   selector: 'app-events',
-  imports: [FaIconComponent],
-  template: `
-    <div class="w-full px-12 pt-8 pb-8 flex flex-col gap-10">
-      <section class="flex flex-col gap-5">
-        <h1 class="text-5xl text-center">Discover Events</h1>
-        <p class="text-center">
-          Join exciting events near your and connect with like-minded people
-        </p>
-      </section>
-      <section class="flex items-center justify-between">
-        <!--          <h2 class="text-2xl">Upcoming Events</h2>-->
-        <div class="flex items-center gap-8 w-full h-full">
-          <div class="relative flex items-center">
-            <fa-icon [icon]="faMagnifyingGlass" class="absolute left-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search events..."
-              id="eventSearch"
-              class="w-full pt-2 pb-2 pr-2 pl-12 placeholder:text-gray-400 border rounded-4xl border-gray-300 shadow-sm focus:outline-none focus:border-gray-400"
-            />
-          </div>
-          <div class="flex gap-2">
-            <button
-              [class.active]="selectedFilter() === Filter.AllEvents"
-              (click)="selectFilter(Filter.AllEvents)"
-              class="relative overflow-hidden px-3 cursor-pointer before:content-['']
-                    before:absolute before:bottom-0 before:left-1/2 before:w-0 before:h-px before:bg-black before:transition-all before:duration-300
-                    [&.active]:before:w-11/12 [&.active]:before:left-[5%] [&.active]:font-semibold"
-            >
-              All Events
-            </button>
-            <button
-              [class.active]="selectedFilter() === Filter.Today"
-              (click)="selectFilter(Filter.Today)"
-              class="relative overflow-hidden px-3 cursor-pointer before:content-['']
-                    before:absolute before:bottom-0 before:left-1/2 before:w-0 before:h-px before:bg-black before:transition-all before:duration-300
-                    [&.active]:before:w-11/12 [&.active]:before:left-[5%] [&.active]:font-semibold"
-            >
-              Today
-            </button>
-            <button
-              [class.active]="selectedFilter() === Filter.Weekend"
-              (click)="selectFilter(Filter.Weekend)"
-              class="relative overflow-hidden px-3 cursor-pointer before:content-['']
-                    before:absolute before:bottom-0 before:left-1/2 before:w-0 before:h-px before:bg-black before:transition-all before:duration-300
-                    [&.active]:before:w-11/12 [&.active]:before:left-[5%] [&.active]:font-semibold"
-            >
-              Weekend
-            </button>
-          </div>
-        </div>
-        <div class="flex gap-1 p-1 border border-gray-300 shadow-sm rounded-4xl">
-          <button
-            [class.active]="viewMode() === ViewMode.Grid"
-            (click)="selectViewMode(ViewMode.Grid)"
-            class="px-2 pt-1 pb-1 transition-all duration-300 rounded-4xl cursor-pointer hover:bg-gray-200 [&.active]:bg-gray-200"
-          >
-            <fa-icon [icon]="faTableCells" class="text-xl" />
-          </button>
-          <button
-            [class.active]="viewMode() === ViewMode.List"
-            (click)="selectViewMode(ViewMode.List)"
-            class="px-2 pt-1 pb-1 transition-all duration-300 rounded-4xl cursor-pointer hover:bg-gray-200 [&.active]:bg-gray-200"
-          >
-            <fa-icon [icon]="faListUl" class="text-xl" />
-          </button>
-        </div>
-      </section>
-    </div>
-  `,
+  imports: [FaIconComponent, EventListingCard],
+  templateUrl: './events.html',
   styles: ``,
 })
 export class Events {
-  protected Filter = Filter;
-  protected selectedFilter = signal(Filter.AllEvents);
-  protected ViewMode = ViewMode;
-  protected viewMode = signal(ViewMode.Grid);
+  protected Filter = EventFilter;
+  protected selectedFilter = signal(EventFilter.AllEvents);
+  protected viewMode = signal(EventListingView.Grid);
+  protected filteredEvents: IEvent[] = [];
 
-  protected selectFilter(filter: Filter): void {
+  constructor() {
+    this.filteredEvents = this.events;
+  }
+
+  protected selectFilter(filter: EventFilter): void {
     this.selectedFilter.set(filter);
   }
 
-  protected selectViewMode(mode: ViewMode): void {
+  protected selectViewMode(mode: EventListingView): void {
     this.viewMode.set(mode);
   }
 
-  protected readonly faTableCells = faTableCells;
+  protected readonly faTableCells = faTableCellsLarge;
   protected readonly faListUl = faListUl;
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
-}
-
-enum Filter {
-  AllEvents,
-  Today,
-  Weekend,
-}
-
-enum ViewMode {
-  Grid,
-  List,
+  protected readonly events: IEvent[] = [
+    {
+      id: '1',
+      title: 'Angular Conference',
+      description: 'A conference about Angular and its ecosystem.',
+      date: new Date('2023-11-15T09:00:00'),
+      location: 'New York',
+      capacity: 300,
+      participants: 150,
+    },
+    {
+      id: '2',
+      title: 'React Summit',
+      description: 'The biggest React conference in the world.',
+      date: new Date('2023-12-05T10:00:00'),
+      location: 'San Francisco',
+      participants: 400,
+    },
+    {
+      id: '3',
+      title: 'Vue.js Meetup',
+      description: 'Monthly meetup for Vue.js.',
+      date: new Date('2023-10-20T18:00:00'),
+      location: 'Los Angeles',
+      participants: 80,
+    },
+    {
+      id: '4',
+      title: 'JavaScript Workshop',
+      description: 'Hands-on workshop covering modern JavaScript features.',
+      date: new Date('2023-09-25T14:00:00'),
+      location: 'Chicago',
+      capacity: 100,
+      participants: 100,
+    },
+    {
+      id: '5',
+      title: 'Tech Expo 2023',
+      description: 'Annual technology exposition showcasing the latest innovations.',
+      date: new Date('2023-11-30T09:00:00'),
+      location: 'Miami',
+      capacity: 1000,
+      participants: 100,
+    },
+    {
+      id: '6',
+      title: 'Full Stack Developer Bootcamp',
+      description: 'Intensive bootcamp for aspiring full stack developers.',
+      date: new Date('2023-12-10T08:00:00'),
+      location: 'Seattle',
+      participants: 50,
+    },
+    {
+      id: '7',
+      title: 'AI & Machine Learning Conference',
+      description: 'Exploring the future of AI and machine learning technologies.',
+      date: new Date('2024-01-15T09:00:00'),
+      location: 'Boston',
+      capacity: 400,
+      participants: 350,
+    },
+    {
+      id: '8',
+      title: 'Cybersecurity Seminar',
+      description: 'Seminar on the latest trends in cybersecurity.',
+      date: new Date('2023-10-05T11:00:00'),
+      location: 'Austin',
+      capacity: 200,
+      participants: 180,
+    },
+    {
+      id: '9',
+      title: 'Cloud Computing Workshop',
+      description: 'Workshop on cloud computing platforms and services.',
+      date: new Date('2023-09-15T13:00:00'),
+      location: 'Denver',
+      participants: 70,
+    },
+    {
+      id: '10',
+      title: 'DevOps Days',
+      description: 'Conference focused on DevOps practices and culture.',
+      date: new Date('2023-11-20T09:00:00'),
+      location: 'Portland',
+      capacity: 250,
+      participants: 200,
+    },
+  ];
+  protected readonly EventListingView = EventListingView;
 }
