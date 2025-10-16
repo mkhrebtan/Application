@@ -35,7 +35,7 @@ export class Events {
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly events: IEvent[] = [
     {
-      id: '1',
+      id: 1,
       title: 'Angular Conference',
       description: 'A conference about Angular and its ecosystem.',
       date: new Date('2023-11-15T09:00:00'),
@@ -44,7 +44,7 @@ export class Events {
       participants: 150,
     },
     {
-      id: '2',
+      id: 2,
       title: 'React Summit',
       description: 'The biggest React conference in the world.',
       date: new Date('2023-12-05T10:00:00'),
@@ -52,7 +52,7 @@ export class Events {
       participants: 400,
     },
     {
-      id: '3',
+      id: 3,
       title: 'Vue.js Meetup',
       description: 'Monthly meetup for Vue.js.',
       date: new Date('2023-10-20T18:00:00'),
@@ -60,7 +60,7 @@ export class Events {
       participants: 80,
     },
     {
-      id: '4',
+      id: 4,
       title: 'JavaScript Workshop',
       description: 'Hands-on workshop covering modern JavaScript features.',
       date: new Date('2023-09-25T14:00:00'),
@@ -69,7 +69,7 @@ export class Events {
       participants: 100,
     },
     {
-      id: '5',
+      id: 5,
       title: 'Tech Expo 2023',
       description: 'Annual technology exposition showcasing the latest innovations.',
       date: new Date('2023-11-30T09:00:00'),
@@ -78,7 +78,7 @@ export class Events {
       participants: 100,
     },
     {
-      id: '6',
+      id: 6,
       title: 'Full Stack Developer Bootcamp',
       description: 'Intensive bootcamp for aspiring full stack developers.',
       date: new Date('2023-12-10T08:00:00'),
@@ -86,7 +86,7 @@ export class Events {
       participants: 50,
     },
     {
-      id: '7',
+      id: 7,
       title: 'AI & Machine Learning Conference',
       description: 'Exploring the future of AI and machine learning technologies.',
       date: new Date('2024-01-15T09:00:00'),
@@ -95,7 +95,7 @@ export class Events {
       participants: 350,
     },
     {
-      id: '8',
+      id: 8,
       title: 'Cybersecurity Seminar',
       description: 'Seminar on the latest trends in cybersecurity.',
       date: new Date('2023-10-05T11:00:00'),
@@ -104,7 +104,7 @@ export class Events {
       participants: 180,
     },
     {
-      id: '9',
+      id: 9,
       title: 'Cloud Computing Workshop',
       description: 'Workshop on cloud computing platforms and services.',
       date: new Date('2023-09-15T13:00:00'),
@@ -112,7 +112,7 @@ export class Events {
       participants: 70,
     },
     {
-      id: '10',
+      id: 10,
       title: 'DevOps Days',
       description: 'Conference focused on DevOps practices and culture.',
       date: new Date('2023-11-20T09:00:00'),
