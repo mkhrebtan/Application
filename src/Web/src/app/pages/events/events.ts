@@ -19,15 +19,19 @@ import { EventService } from '../../core/services/event-service';
 export class Events {
   protected heroTitle = 'Explore Upcoming Events';
   protected heroDescription = 'Join exciting events near your and connect with like-minded people';
+
   protected readonly faMagnifyingGlass = faMagnifyingGlass;
   protected readonly Filter = EventFilter;
-  protected selectedFilter = signal(EventFilter.AllEvents);
   protected readonly EventListingView = EventListingView;
+
+  protected selectedFilter = signal(EventFilter.AllEvents);
   protected viewMode = signal(EventListingView.Grid);
+
   protected readonly viewOptions: ToggleOption<EventListingView>[] = [
     { label: 'Grid View', value: EventListingView.Grid, icon: faTableCellsLarge },
     { label: 'List View', value: EventListingView.List, icon: faListUl },
   ];
+
   protected readonly events: IEvent[] = [];
   protected filteredEvents: IEvent[] = [];
   private readonly eventService = inject(EventService);
@@ -39,9 +43,5 @@ export class Events {
 
   protected selectFilter(filter: EventFilter): void {
     this.selectedFilter.set(filter);
-  }
-
-  protected selectViewMode(mode: EventListingView): void {
-    this.viewMode.set(mode);
   }
 }
