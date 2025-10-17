@@ -10,7 +10,7 @@ export class EventService {
   }
 
   getEventById(id: number): IEvent | undefined {
-    return this.events.find((event) => event.id === id);
+    return this.events.find((event) => event.id == id);
   }
 
   private readonly events: IEvent[] = [

@@ -1,16 +1,18 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { IEvent } from '../models/event';
 import { DatePipe } from '@angular/common';
 import { faInfinity, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { EventListingView } from '../models/event-listing-view';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event-listing-card',
   imports: [DatePipe, FaIconComponent],
   template: `
     <div
+      (click)="navigateToDetails()"
       class="border p-4 rounded-lg flex flex-col gap-5 border-gray-300 shadow-md group cursor-pointer hover:scale-[1.02] transition-all duration-300"
     >
       <div class="flex flex-col gap-2">
@@ -73,10 +75,17 @@ import { EventListingView } from '../models/event-listing-view';
   `,
   styles: ``,
 })
-export class EventListingCard {
+export class EventListingCard implements OnInit {
   @Input() event!: IEvent;
   @Input() viewMode: EventListingView = EventListingView.Grid;
 
+  private router = inject(Router);
+  protected readonly faInfinity = faInfinity;
+  protected readonly faClock = faClock;
+  protected readonly faLocationDot = faLocationDot;
+  protected readonly faUsers = faUsers;
+  protected readonly EventListingView = EventListingView;
+  protected readonly EventState = EventState;
   protected eventState = signal(EventState.CanJoin);
 
   ngOnInit() {
@@ -87,12 +96,9 @@ export class EventListingCard {
     }
   }
 
-  protected readonly faInfinity = faInfinity;
-  protected readonly faClock = faClock;
-  protected readonly faLocationDot = faLocationDot;
-  protected readonly faUsers = faUsers;
-  protected readonly EventListingView = EventListingView;
-  protected readonly EventState = EventState;
+  navigateToDetails() {
+    this.router.navigate(['/events', this.event.id]);
+  }
 }
 
 export enum EventState {

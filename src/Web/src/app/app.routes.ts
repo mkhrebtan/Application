@@ -27,7 +27,7 @@ export const routes: Routes = [
         title: 'Create Event',
       },
       {
-        path: 'event-details',
+        path: 'events/:id',
         component: EventDetails,
         title: 'Event Details',
       },
