@@ -1,0 +1,199 @@
+﻿<div class="pt-8 pb-8 flex flex-col gap-10">
+  <app-hero-section [title]="heroTitle" [description]="heroDescription" />
+  <div class="max-w-7xl mx-auto px-4 w-full">
+    <form
+      id="eventCreationForm"
+      [formGroup]="eventCreationForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col gap-6 lg:flex-row lg:gap-8"
+    >
+      <div
+        class="w-full lg:w-1/2 flex flex-col gap-6 bg-gray-50 rounded-lg border border-gray-200"
+      >
+        <div class="flex flex-col gap-2 p-4">
+          <label for="title" class="text-sm font-medium text-gray-700">
+            Event Title <span class="text-red-500">*</span>
+          </label>
+          <input
+            id="title"
+            formControlName="title"
+            type="text"
+            class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
+            placeholder="Enter event title"
+            [ngClass]="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500':
+                    title?.invalid && title?.touched,
+                }"
+          />
+          @if (title?.invalid && title?.touched) {
+            <div class="text-red-500 text-xs mt-1">
+              @if (title?.hasError('required')) {
+                <span>Event title is required</span>
+              }
+              @if (title?.hasError('maxlength')) {
+                <span>Title must be less than 100 characters</span>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="flex flex-col gap-2 p-4 h-full">
+          <label for="description" class="text-sm font-medium text-gray-700">
+            Description <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 resize-vertical min-h-10/12 transition-colors"
+            placeholder="Describe your event in detail..."
+            [ngClass]="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500':
+                    description?.invalid && description?.touched,
+                }"
+          ></textarea>
+          @if (description?.invalid && description?.touched) {
+            <div class="text-red-500 text-xs mt-1 mb-5">
+              @if (description?.hasError('required')) {
+                <span>Description is required</span>
+              }
+              @if (description?.hasError('maxlength')) {
+                <span>Description must be less than 500 characters</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="w-full lg:w-1/2 flex flex-col gap-6">
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div class="flex flex-col">
+            <label for="date" class="text-sm font-medium text-gray-700 mb-2">
+              Date & Time <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="date"
+              formControlName="date"
+              type="datetime-local"
+              class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
+              [ngClass]="{
+                    'border-red-500 focus:border-red-500 focus:ring-red-500':
+                      date?.invalid && date?.touched,
+                  }"
+            />
+            @if (date?.invalid && date?.touched) {
+              <div class="text-red-500 text-xs mt-1">
+                @if (date?.hasError('required')) {
+                  <span>Date and time is required</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div class="space-y-4">
+            <div class="flex flex-col">
+              <label for="location" class="text-sm font-medium text-gray-700 mb-2">
+                Location <span class="text-red-500">*</span>
+              </label>
+              <input
+                id="location"
+                formControlName="location"
+                type="text"
+                class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
+                placeholder="Event location"
+                [ngClass]="{
+                      'border-red-500 focus:border-red-500 focus:ring-red-500':
+                        location?.invalid && location?.touched,
+                    }"
+              />
+              @if (location?.invalid && location?.touched) {
+                <div class="text-red-500 text-xs mt-1">
+                  @if (location?.hasError('required')) {
+                    <span>Location is required</span>
+                  }
+                  @if (location?.hasError('maxlength')) {
+                    <span>Location must be less than 200 characters</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="flex flex-col">
+              <label for="capacity" class="text-sm font-medium text-gray-700 mb-2">
+                Capacity (optional)
+              </label>
+              <input
+                id="capacity"
+                formControlName="capacity"
+                type="number"
+                min="1"
+                class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
+                placeholder="Maximum attendees"
+                [ngClass]="{
+                      'border-red-500 focus:border-red-500 focus:ring-red-500':
+                        capacity?.invalid && capacity?.touched,
+                    }"
+              />
+              @if (capacity?.invalid && capacity?.touched) {
+                <div class="text-red-500 text-xs mt-1">
+                  @if (capacity?.hasError('min')) {
+                    <span>Capacity must be at least 1</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <h3 class="text-lg font-medium text-gray-800 mb-4">Visibility</h3>
+          <div class="space-y-3">
+            <label class="flex items-center space-x-3 cursor-pointer group">
+              <input
+                type="radio"
+                formControlName="visibility"
+                value="public"
+                class="w-4 h-4 text-indigo-600 border-gray-300"
+              />
+              <div class="flex flex-col">
+                    <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"
+                    >Public</span
+                    >
+                <span class="text-xs text-gray-500">Anyone can see and join this event</span>
+              </div>
+            </label>
+
+            <label class="flex items-center space-x-3 cursor-pointer group">
+              <input
+                type="radio"
+                formControlName="visibility"
+                value="private"
+                class="w-4 h-4 text-indigo-600 border-gray-300"
+              />
+              <div class="flex flex-col">
+                    <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"
+                    >Private</span
+                    >
+                <span class="text-xs text-gray-500"
+                >Only invited people can see this event</span
+                >
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="mt-8 flex justify-center">
+      <button
+        type="submit"
+        form="eventCreationForm"
+        [disabled]="eventCreationForm.invalid"
+        class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer text-white font-medium py-3 px-8 rounded-md transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 w-full md:w-auto md:min-w-[200px]"
+      >
+        Create Event
+      </button>
+    </div>
+  </div>
+</div>
