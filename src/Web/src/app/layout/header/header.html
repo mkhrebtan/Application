@@ -7,6 +7,7 @@
         class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
                     hover:-translate-y-px hover:text-black"
         routerLink="/events"
+        [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
       >
         <fa-icon [icon]="faListUl" />
@@ -17,6 +18,7 @@
         class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
                     hover:-translate-y-px hover:text-black"
         routerLink="/my-events"
+        [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
       >
         <fa-icon [icon]="faCalendar" />
@@ -27,6 +29,7 @@
         class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
                     hover:-translate-y-px hover:text-black"
         routerLink="/create-event"
+        [routerLinkActiveOptions]="{ exact: true }"
         routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
       >
         <fa-icon [icon]="faPlus" />
