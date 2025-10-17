@@ -5,14 +5,17 @@ import { EventFilter } from '../../features/event/models/event-filter';
 import { EventListingView } from '../../features/event/models/event-listing-view';
 import { IEvent } from '../../features/event/models/event';
 import { EventListingCard } from '../../features/event/event-listing-card/event-listing-card';
+import { HeroSection } from '../../layout/hero-section/hero-section';
 
 @Component({
   selector: 'app-events',
-  imports: [FaIconComponent, EventListingCard],
+  imports: [FaIconComponent, EventListingCard, HeroSection],
   templateUrl: './events.html',
   styles: ``,
 })
 export class Events {
+  protected heroTitle = 'Explore Upcoming Events';
+  protected heroDescription = 'Join exciting events near your and connect with like-minded people';
   protected Filter = EventFilter;
   protected selectedFilter = signal(EventFilter.AllEvents);
   protected viewMode = signal(EventListingView.Grid);
