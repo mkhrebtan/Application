@@ -59,7 +59,7 @@ export class DayCard implements OnInit {
   @Input() date!: Date;
   @Input() events: any[] = [];
   @Input() viewMode!: CalendarViewMode;
-  @Input() isDisplayedMonth!: boolean;
+  @Input() isDisplayedMonth: boolean = true;
 
   protected isPresentDay = false;
   protected readonly calendarViewMode = CalendarViewMode;
