@@ -62,8 +62,6 @@ export class DayCard implements OnInit {
   @Input() isDisplayedMonth!: boolean;
 
   protected isPresentDay = false;
-  protected isExpanded = signal(false);
-  protected readonly faChevronDown = faChevronDown;
   protected readonly calendarViewMode = CalendarViewMode;
 
   ngOnInit() {
@@ -73,9 +71,5 @@ export class DayCard implements OnInit {
   private isToday(date: Date): boolean {
     const today = new Date();
     return date.toDateString() === today.toDateString();
-  }
-
-  protected toggleExpand(): void {
-    this.isExpanded.update((expanded) => !expanded);
   }
 }
