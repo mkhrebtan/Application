@@ -5,16 +5,22 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import { IEvent } from '../../event/models/event';
 import { CalendarViewMode } from '../models/calendar-view-mode';
 import { DayCard } from '../day-card/day-card';
+import { ToggleOption } from '../../../shared/models/toggle-option';
+import { ViewToggle } from '../../../shared/components/view-toggle/view-toggle';
 
 @Component({
   selector: 'app-calendar-view',
-  imports: [DatePipe, FaIconComponent, DayCard],
+  imports: [DatePipe, FaIconComponent, DayCard, ViewToggle],
   templateUrl: './calendar-view.html',
   styles: ``,
 })
 export class CalendarView {
   protected readonly calendarViewMode = CalendarViewMode;
   protected viewMode = signal(CalendarViewMode.Month);
+  protected readonly calendarViewOptions: ToggleOption<CalendarViewMode>[] = [
+    { label: 'Month', value: CalendarViewMode.Month },
+    { label: 'Week', value: CalendarViewMode.Week },
+  ];
   protected readonly faChevronLeft = faChevronLeft;
   protected readonly faChevronRight = faChevronRight;
   protected currentDate = signal(new Date());
