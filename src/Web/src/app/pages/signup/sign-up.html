@@ -1,0 +1,225 @@
+﻿<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      Create your account
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Or
+      <a
+        routerLink="/login"
+        class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+      >
+        log in to your existing account
+      </a>
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <form
+        id="signupForm"
+        [formGroup]="signupForm"
+        (ngSubmit)="onSubmit()"
+        class="space-y-6"
+      >
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700">
+              First name <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-1">
+              <input
+                id="firstName"
+                formControlName="firstName"
+                type="text"
+                autocomplete="given-name"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
+                placeholder="First name"
+                [ngClass]="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500':
+                    firstName?.invalid && firstName?.touched,
+                }"
+              />
+              @if (firstName?.invalid && firstName?.touched) {
+                <div class="text-red-500 text-xs mt-1">
+                  @if (firstName?.hasError('required')) {
+                    <span>First name is required</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label for="lastName" class="block text-sm font-medium text-gray-700">
+              Last name <span class="text-red-500">*</span>
+            </label>
+            <div class="mt-1">
+              <input
+                id="lastName"
+                formControlName="lastName"
+                type="text"
+                autocomplete="family-name"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
+                placeholder="Last name"
+                [ngClass]="{
+                  'border-red-500 focus:border-red-500 focus:ring-red-500':
+                    lastName?.invalid && lastName?.touched,
+                }"
+              />
+              @if (lastName?.invalid && lastName?.touched) {
+                <div class="text-red-500 text-xs mt-1">
+                  @if (lastName?.hasError('required')) {
+                    <span>Last name is required</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email address <span class="text-red-500">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              autocomplete="email"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
+              placeholder="Enter your email"
+              [ngClass]="{
+                'border-red-500 focus:border-red-500 focus:ring-red-500':
+                  email?.invalid && email?.touched,
+              }"
+            />
+            @if (email?.invalid && email?.touched) {
+              <div class="text-red-500 text-xs mt-1">
+                @if (email?.hasError('required')) {
+                  <span>Email is required</span>
+                }
+                @if (email?.hasError('email')) {
+                  <span>Please enter a valid email address</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            Password <span class="text-red-500">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              autocomplete="new-password"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
+              placeholder="Create a password"
+              [ngClass]="{
+                'border-red-500 focus:border-red-500 focus:ring-red-500':
+                  password?.invalid && password?.touched,
+              }"
+            />
+            @if (password?.invalid && password?.touched) {
+              <div class="text-red-500 text-xs mt-1">
+                @if (password?.hasError('required')) {
+                  <span>Password is required</span>
+                }
+                @if (password?.hasError('minlength')) {
+                  <span>Password must be at least 6 characters</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+            Confirm Password <span class="text-red-500">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
+              placeholder="Confirm your password"
+              [ngClass]="{
+                'border-red-500 focus:border-red-500 focus:ring-red-500':
+                  confirmPassword?.touched && (confirmPassword?.invalid || signupForm.hasError('passwordMismatch')),
+              }"
+            />
+            @if (confirmPassword?.touched && (confirmPassword?.invalid || signupForm.hasError('passwordMismatch'))) {
+              <div class="text-red-500 text-xs mt-1">
+                @if (confirmPassword?.hasError('required')) {
+                  <span>Please confirm your password</span>
+                }
+                @else if (signupForm.hasError('passwordMismatch')) {
+                  <span>Passwords do not match</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            form="signupForm"
+            [disabled]="signupForm.invalid || isLoading()"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer transition-all duration-300"
+          >
+            @if (isLoading()) {
+              <fa-icon [icon]="faSpinner" class="animate-spin mr-2" />
+              Creating account...
+            } @else {
+              Create account
+            }
+          </button>
+        </div>
+      </form>
+
+      @if (errorMessage()) {
+        <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <fa-icon [icon]="faCircleXmark" class="h-5 w-5 text-red-400" />
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">
+                Registration failed
+              </h3>
+              <div class="mt-2 text-sm text-red-700">
+                {{ errorMessage() }}
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <fa-icon [icon]="faCircleCheck" class="h-5 w-5 text-green-400" />
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-green-800">
+                Account created successfully!
+              </h3>
+              <div class="mt-2 text-sm text-green-700">
+                {{ successMessage() }}
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
