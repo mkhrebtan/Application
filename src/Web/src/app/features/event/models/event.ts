@@ -6,4 +6,5 @@
   location: string;
   capacity?: number;
   participants: number;
+  visibility: 'public' | 'private';
 }

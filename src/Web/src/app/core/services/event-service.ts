@@ -22,6 +22,7 @@ export class EventService {
       location: 'New York',
       capacity: 300,
       participants: 150,
+      visibility: 'public',
     },
     {
       id: 2,
@@ -30,6 +31,7 @@ export class EventService {
       date: new Date('2025-10-05T10:00:00'),
       location: 'San Francisco',
       participants: 400,
+      visibility: 'public',
     },
     {
       id: 3,
@@ -38,6 +40,7 @@ export class EventService {
       date: new Date('2025-10-20T18:00:00'),
       location: 'Los Angeles',
       participants: 80,
+      visibility: 'public',
     },
     {
       id: 4,
@@ -47,6 +50,7 @@ export class EventService {
       location: 'Chicago',
       capacity: 100,
       participants: 100,
+      visibility: 'public',
     },
     {
       id: 5,
@@ -56,6 +60,7 @@ export class EventService {
       location: 'Miami',
       capacity: 1000,
       participants: 100,
+      visibility: 'public',
     },
     {
       id: 6,
@@ -64,6 +69,7 @@ export class EventService {
       date: new Date('2025-12-10T08:00:00'),
       location: 'Seattle',
       participants: 50,
+      visibility: 'public',
     },
     {
       id: 7,
@@ -73,6 +79,7 @@ export class EventService {
       location: 'Boston',
       capacity: 400,
       participants: 350,
+      visibility: 'public',
     },
     {
       id: 8,
@@ -82,6 +89,7 @@ export class EventService {
       location: 'Austin',
       capacity: 200,
       participants: 180,
+      visibility: 'public',
     },
     {
       id: 9,
@@ -90,6 +98,7 @@ export class EventService {
       date: new Date('2025-09-15T13:00:00'),
       location: 'Denver',
       participants: 70,
+      visibility: 'public',
     },
     {
       id: 10,
@@ -99,6 +108,7 @@ export class EventService {
       location: 'Portland',
       capacity: 250,
       participants: 200,
+      visibility: 'public',
     },
   ];
 }

@@ -8,10 +8,11 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faLocationDot, faUsers, faInfinity } from '@fortawesome/free-solid-svg-icons';
 import { EventState } from '../../features/event/event-listing-card/event-listing-card';
+import { EditEventDialog } from '../../features/event/edit-event-dialog/edit-event-dialog';
 
 @Component({
   selector: 'app-event-details',
-  imports: [HeroSection, DatePipe, FaIconComponent],
+  imports: [HeroSection, DatePipe, FaIconComponent, EditEventDialog],
   templateUrl: './event-details.html',
   styles: ``,
 })
@@ -44,6 +45,8 @@ export class EventDetails {
   protected readonly EventState = EventState;
   protected eventState = signal(EventState.CanJoin);
 
+  protected editDialogIsOpen = signal(false);
+
   constructor() {
     let eventId: number = 0;
     this.activatedRoute.params.subscribe((params) => {
@@ -55,5 +58,15 @@ export class EventDetails {
     } else {
       this.router.navigate(['/404']);
     }
+  }
+
+  openEditDialog() {
+    this.editDialogIsOpen.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeEditDialog() {
+    this.editDialogIsOpen.set(false);
+    document.body.style.overflow = 'auto';
   }
 }
