@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { HeroSection } from '../../layout/hero-section/hero-section';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormInput } from '../../shared/components/form-input/form-input';
+import { EventForm } from '../../features/event/event-form/event-form';
 
 @Component({
   selector: 'app-create-event',
-  imports: [HeroSection, ReactiveFormsModule, CommonModule, FormInput],
+  imports: [HeroSection, ReactiveFormsModule, CommonModule, EventForm],
   templateUrl: './create-event.html',
   styles: ``,
 })
@@ -24,25 +24,10 @@ export class CreateEvent {
     visibility: ['public', [Validators.required]],
   });
 
-  get title(): AbstractControl | null {
-    return this.eventCreationForm.get('title');
-  }
-  get description(): AbstractControl | null {
-    return this.eventCreationForm.get('description');
-  }
-  get date(): AbstractControl | null {
-    return this.eventCreationForm.get('date');
-  }
-  get location(): AbstractControl | null {
-    return this.eventCreationForm.get('location');
-  }
-  get capacity(): AbstractControl | null {
-    return this.eventCreationForm.get('capacity');
-  }
-
   onSubmit() {
     if (this.eventCreationForm.valid) {
       const formData = this.eventCreationForm.value;
+      formData.date = new Date(formData.date!).toISOString();
       console.log('Event Created:', formData);
     } else {
       console.log('Form is invalid');
