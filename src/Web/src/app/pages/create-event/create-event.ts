@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { HeroSection } from '../../layout/hero-section/hero-section';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormInput } from '../../shared/components/form-input/form-input';
 
 @Component({
   selector: 'app-create-event',
-  imports: [HeroSection, ReactiveFormsModule, CommonModule],
+  imports: [HeroSection, ReactiveFormsModule, CommonModule, FormInput],
   templateUrl: './create-event.html',
   styles: ``,
 })

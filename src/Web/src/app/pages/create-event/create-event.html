@@ -10,32 +10,13 @@
       <div
         class="w-full lg:w-1/2 flex flex-col gap-6 bg-gray-50 rounded-lg border border-gray-200"
       >
-        <div class="flex flex-col gap-2 p-4">
-          <label for="title" class="text-sm font-medium text-gray-700">
-            Event Title <span class="text-red-500">*</span>
-          </label>
-          <input
-            id="title"
-            formControlName="title"
-            type="text"
-            class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
-            placeholder="Enter event title"
-            [ngClass]="{
-                  'border-red-500 focus:border-red-500 focus:ring-red-500':
-                    title?.invalid && title?.touched,
-                }"
-          />
-          @if (title?.invalid && title?.touched) {
-            <div class="text-red-500 text-xs mt-1">
-              @if (title?.hasError('required')) {
-                <span>Event title is required</span>
-              }
-              @if (title?.hasError('maxlength')) {
-                <span>Title must be less than 100 characters</span>
-              }
-            </div>
+        <app-form-input [control]="title!" [label]="'Event Title'" [id]="'title'" [placeholder]="'Enter event title'" class="p-4">
+          @if (title?.hasError('required')) {
+            <span error-message>Event title is required</span>
+          } @else if (title?.hasError('maxlength')) {
+            <span error-message>Title must be less than 100 characters</span>
           }
-        </div>
+        </app-form-input>
 
         <div class="flex flex-col gap-2 p-4 h-full">
           <label for="description" class="text-sm font-medium text-gray-700">
@@ -44,7 +25,7 @@
           <textarea
             id="description"
             formControlName="description"
-            class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 resize-vertical min-h-10/12 transition-colors"
+            class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 h-full focus:ring-gray-400 focus:border-gray-400 transition-colors"
             placeholder="Describe your event in detail..."
             [ngClass]="{
                   'border-red-500 focus:border-red-500 focus:ring-red-500':
@@ -52,11 +33,10 @@
                 }"
           ></textarea>
           @if (description?.invalid && description?.touched) {
-            <div class="text-red-500 text-xs mt-1 mb-5">
+            <div class="text-red-500 text-xs mt-1">
               @if (description?.hasError('required')) {
                 <span>Description is required</span>
-              }
-              @if (description?.hasError('maxlength')) {
+              } @else if (description?.hasError('maxlength')) {
                 <span>Description must be less than 500 characters</span>
               }
             </div>
@@ -66,83 +46,28 @@
 
       <div class="w-full lg:w-1/2 flex flex-col gap-6">
         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <div class="flex flex-col">
-            <label for="date" class="text-sm font-medium text-gray-700 mb-2">
-              Date & Time <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="date"
-              formControlName="date"
-              type="datetime-local"
-              class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
-              [ngClass]="{
-                    'border-red-500 focus:border-red-500 focus:ring-red-500':
-                      date?.invalid && date?.touched,
-                  }"
-            />
-            @if (date?.invalid && date?.touched) {
-              <div class="text-red-500 text-xs mt-1">
-                @if (date?.hasError('required')) {
-                  <span>Date and time is required</span>
-                }
-              </div>
+          <app-form-input [control]="date!" [type]="'datetime-local'" [label]="'Date & Time'" [id]="'date'">
+            @if (date?.hasError('required')) {
+              <span error-message>Date and time is required</span>
             }
-          </div>
+          </app-form-input>
         </div>
 
         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <div class="space-y-4">
-            <div class="flex flex-col">
-              <label for="location" class="text-sm font-medium text-gray-700 mb-2">
-                Location <span class="text-red-500">*</span>
-              </label>
-              <input
-                id="location"
-                formControlName="location"
-                type="text"
-                class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
-                placeholder="Event location"
-                [ngClass]="{
-                      'border-red-500 focus:border-red-500 focus:ring-red-500':
-                        location?.invalid && location?.touched,
-                    }"
-              />
-              @if (location?.invalid && location?.touched) {
-                <div class="text-red-500 text-xs mt-1">
-                  @if (location?.hasError('required')) {
-                    <span>Location is required</span>
-                  }
-                  @if (location?.hasError('maxlength')) {
-                    <span>Location must be less than 200 characters</span>
-                  }
-                </div>
+          <div class="flex flex-col gap-4">
+            <app-form-input [control]="location!" [label]="'Location'" [id]="'location'" [placeholder]="'Event location'">
+              @if (location?.hasError('required')) {
+                <span error-message>Location is required</span>
+              } @else if (location?.hasError('maxlength')) {
+                <span error-message>Location must be less than 200 characters</span>
               }
-            </div>
+            </app-form-input>
 
-            <div class="flex flex-col">
-              <label for="capacity" class="text-sm font-medium text-gray-700 mb-2">
-                Capacity (optional)
-              </label>
-              <input
-                id="capacity"
-                formControlName="capacity"
-                type="number"
-                min="1"
-                class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-colors"
-                placeholder="Maximum attendees"
-                [ngClass]="{
-                      'border-red-500 focus:border-red-500 focus:ring-red-500':
-                        capacity?.invalid && capacity?.touched,
-                    }"
-              />
-              @if (capacity?.invalid && capacity?.touched) {
-                <div class="text-red-500 text-xs mt-1">
-                  @if (capacity?.hasError('min')) {
-                    <span>Capacity must be at least 1</span>
-                  }
-                </div>
+            <app-form-input [control]="capacity!" [type]="'number'" [label]="'Capacity (optional)'" [id]="'capacity'" [placeholder]="'Maximum attendees'">
+              @if (capacity?.hasError('min')) {
+                <span error-message>Capacity must be at least 1</span>
               }
-            </div>
+            </app-form-input>
           </div>
         </div>
 
