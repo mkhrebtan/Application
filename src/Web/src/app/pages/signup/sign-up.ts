@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { faSpinner, faCircleXmark, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { FormInput } from '../../shared/components/form-input/form-input';
+import { ConfirmPasswordInput } from '../../features/auth/confirm-password-input/confirm-password-input';
 
 // Custom validator for password confirmation
 export const passwordMatchValidator: ValidatorFn = (
@@ -19,15 +21,24 @@ export const passwordMatchValidator: ValidatorFn = (
   const password = control.get('password');
   const confirmPassword = control.get('confirmPassword');
 
-  if (password && confirmPassword && password.value !== confirmPassword.value) {
-    return { passwordMismatch: true }; // Return an error object
+  if (password && confirmPassword && password.value && confirmPassword.value) {
+    if (password.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
   }
-  return null; // No error
+  return null;
 };
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule, RouterModule, FaIconComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    RouterModule,
+    FaIconComponent,
+    FormInput,
+    ConfirmPasswordInput,
+  ],
   templateUrl: './sign-up.html',
   styles: ``,
 })
@@ -53,6 +64,22 @@ export class SignUp {
     },
     { validators: passwordMatchValidator },
   );
+
+  constructor() {
+    // Listen for password changes and revalidate form
+    this.signupForm.get('password')?.valueChanges.subscribe(() => {
+      const confirmPasswordControl = this.signupForm.get('confirmPassword');
+      if (confirmPasswordControl?.value) {
+        this.signupForm.updateValueAndValidity();
+      }
+    });
+
+    // Listen for confirm password changes and revalidate form
+    this.signupForm.get('confirmPassword')?.valueChanges.subscribe(() => {
+      this.signupForm.updateValueAndValidity();
+    });
+  }
+
   get firstName(): AbstractControl | null {
     return this.signupForm.get('firstName');
   }

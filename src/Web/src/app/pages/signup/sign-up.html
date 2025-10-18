@@ -1,6 +1,6 @@
 ﻿<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <h2 class="text-center text-3xl font-semibold">
       Create your account
     </h2>
     <p class="mt-2 text-center text-sm text-gray-600">
@@ -20,153 +20,50 @@
         id="signupForm"
         [formGroup]="signupForm"
         (ngSubmit)="onSubmit()"
-        class="space-y-6"
+        class="flex flex-col gap-6"
       >
         <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="firstName" class="block text-sm font-medium text-gray-700">
-              First name <span class="text-red-500">*</span>
-            </label>
-            <div class="mt-1">
-              <input
-                id="firstName"
-                formControlName="firstName"
-                type="text"
-                autocomplete="given-name"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
-                placeholder="First name"
-                [ngClass]="{
-                  'border-red-500 focus:border-red-500 focus:ring-red-500':
-                    firstName?.invalid && firstName?.touched,
-                }"
-              />
-              @if (firstName?.invalid && firstName?.touched) {
-                <div class="text-red-500 text-xs mt-1">
-                  @if (firstName?.hasError('required')) {
-                    <span>First name is required</span>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-
-          <div>
-            <label for="lastName" class="block text-sm font-medium text-gray-700">
-              Last name <span class="text-red-500">*</span>
-            </label>
-            <div class="mt-1">
-              <input
-                id="lastName"
-                formControlName="lastName"
-                type="text"
-                autocomplete="family-name"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
-                placeholder="Last name"
-                [ngClass]="{
-                  'border-red-500 focus:border-red-500 focus:ring-red-500':
-                    lastName?.invalid && lastName?.touched,
-                }"
-              />
-              @if (lastName?.invalid && lastName?.touched) {
-                <div class="text-red-500 text-xs mt-1">
-                  @if (lastName?.hasError('required')) {
-                    <span>Last name is required</span>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">
-            Email address <span class="text-red-500">*</span>
-          </label>
-          <div class="mt-1">
-            <input
-              id="email"
-              formControlName="email"
-              type="email"
-              autocomplete="email"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
-              placeholder="Enter your email"
-              [ngClass]="{
-                'border-red-500 focus:border-red-500 focus:ring-red-500':
-                  email?.invalid && email?.touched,
-              }"
-            />
-            @if (email?.invalid && email?.touched) {
-              <div class="text-red-500 text-xs mt-1">
-                @if (email?.hasError('required')) {
-                  <span>Email is required</span>
-                }
-                @if (email?.hasError('email')) {
-                  <span>Please enter a valid email address</span>
-                }
-              </div>
+          <app-form-input [control]="firstName!" [type]="'text'" [label]="'First name'" [id]="'firstName'" [autocomplete]="'given-name'" [placeholder]="'First name'">
+            @if (firstName?.hasError('required')) {
+              <span error-message>First name is required</span>
             }
-          </div>
+          </app-form-input>
+
+          <app-form-input [control]="lastName!" [type]="'text'" [label]="'Last name'" [id]="'lastName'" [autocomplete]="'family-name'" [placeholder]="'Last name'">
+            @if (lastName?.hasError('required')) {
+              <span error-message>Last name is required</span>
+            }
+          </app-form-input>
         </div>
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">
-            Password <span class="text-red-500">*</span>
-          </label>
-          <div class="mt-1">
-            <input
-              id="password"
-              formControlName="password"
-              type="password"
-              autocomplete="new-password"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
-              placeholder="Create a password"
-              [ngClass]="{
-                'border-red-500 focus:border-red-500 focus:ring-red-500':
-                  password?.invalid && password?.touched,
-              }"
-            />
-            @if (password?.invalid && password?.touched) {
-              <div class="text-red-500 text-xs mt-1">
-                @if (password?.hasError('required')) {
-                  <span>Password is required</span>
-                }
-                @if (password?.hasError('minlength')) {
-                  <span>Password must be at least 6 characters</span>
-                }
-              </div>
-            }
-          </div>
-        </div>
+        <app-form-input [control]="email!" [type]="'email'" [label]="'Email address'" [id]="'email'" [autocomplete]="'email'" [placeholder]="'Enter your email'">
+          @if (email?.hasError('required')) {
+            <span error-message>Email is required</span>
+          } @else if (email?.hasError('email')) {
+            <span error-message>Please enter a valid email address</span>
+          }
+        </app-form-input>
 
-        <div>
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
-            Confirm Password <span class="text-red-500">*</span>
-          </label>
-          <div class="mt-1">
-            <input
-              id="confirmPassword"
-              formControlName="confirmPassword"
-              type="password"
-              autocomplete="new-password"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-sm transition-colors"
-              placeholder="Confirm your password"
-              [ngClass]="{
-                'border-red-500 focus:border-red-500 focus:ring-red-500':
-                  confirmPassword?.touched && (confirmPassword?.invalid || signupForm.hasError('passwordMismatch')),
-              }"
-            />
-            @if (confirmPassword?.touched && (confirmPassword?.invalid || signupForm.hasError('passwordMismatch'))) {
-              <div class="text-red-500 text-xs mt-1">
-                @if (confirmPassword?.hasError('required')) {
-                  <span>Please confirm your password</span>
-                }
-                @else if (signupForm.hasError('passwordMismatch')) {
-                  <span>Passwords do not match</span>
-                }
-              </div>
-            }
-          </div>
-        </div>
+        <app-form-input [control]="password!" [type]="'password'" [label]="'Password'" [id]="'password'" [autocomplete]="'current-password'" [placeholder]="'Create a password'">
+          @if (password?.hasError('required')) {
+            <span error-message>Password is required</span>
+          } @else if (password?.hasError('minlength')) {
+            <span error-message>Password must be at least 6 characters</span>
+          }
+        </app-form-input>
+
+        <app-confirm-password-input
+          [control]="confirmPassword!"
+          [label]="'Confirm Password'"
+          [id]="'confirmPassword'"
+          [hasPasswordMismatchError]="signupForm.hasError('passwordMismatch')"
+        >
+          @if (confirmPassword?.hasError('required')) {
+            <span error-message-confirm>Please confirm your password</span>
+          } @else if (signupForm.hasError('passwordMismatch')) {
+            <span error-message-confirm>Passwords do not match</span>
+          }
+        </app-confirm-password-input>
 
         <div>
           <button
