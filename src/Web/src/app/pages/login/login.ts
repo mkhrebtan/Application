@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { faSpinner, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { FormInput } from '../../shared/components/form-input/form-input';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule, RouterModule, FaIconComponent],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule, FaIconComponent, FormInput],
   templateUrl: './login.html',
   styles: ``,
 })
