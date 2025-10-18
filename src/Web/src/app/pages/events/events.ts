@@ -9,10 +9,11 @@ import { HeroSection } from '../../layout/hero-section/hero-section';
 import { ToggleOption } from '../../shared/models/toggle-option';
 import { ViewToggle } from '../../shared/components/view-toggle/view-toggle';
 import { EventService } from '../../core/services/event-service';
+import { JoinEventDialog } from '../../features/event/join-event-dialog/join-event-dialog';
 
 @Component({
   selector: 'app-events',
-  imports: [FaIconComponent, EventListingCard, HeroSection, ViewToggle],
+  imports: [FaIconComponent, EventListingCard, HeroSection, ViewToggle, JoinEventDialog],
   templateUrl: './events.html',
   styles: ``,
 })
@@ -36,6 +37,8 @@ export class Events {
   protected filteredEvents: IEvent[] = [];
   private readonly eventService = inject(EventService);
 
+  protected joinEventDialogIsOpen = signal(false);
+
   constructor() {
     this.events = this.eventService.getEvents();
     this.filteredEvents = this.events;
@@ -43,5 +46,20 @@ export class Events {
 
   protected selectFilter(filter: EventFilter): void {
     this.selectedFilter.set(filter);
+  }
+
+  protected onJoinEventClick(event: IEvent) {
+    this.joinEventDialogIsOpen.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  protected closeJoinEventDialog() {
+    this.joinEventDialogIsOpen.set(false);
+    document.body.style.overflow = 'auto';
+  }
+
+  protected onJoinEventFormSubmit() {
+    this.closeJoinEventDialog();
+    // Additional logic for handling the form submission can be added here
   }
 }

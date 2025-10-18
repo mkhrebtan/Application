@@ -53,7 +53,7 @@
            [class.max-w-5xl]="viewMode() === EventListingView.List"
            class="gap-6">
     @for (event of events; track event.id) {
-      <app-event-listing-card [event]="event" [viewMode]="viewMode()" />
+      <app-event-listing-card [event]="event" [viewMode]="viewMode()" (joinClick)="onJoinEventClick($event)" />
     }
 
     @if (filteredEvents.length === 0) {
@@ -61,3 +61,7 @@
     }
   </section>
 </div>
+
+@if (joinEventDialogIsOpen()) {
+  <app-join-event-dialog (closeDialog)="closeJoinEventDialog()" (joinEventSubmit)="onJoinEventFormSubmit()" />
+}
