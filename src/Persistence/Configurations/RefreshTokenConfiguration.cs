@@ -13,7 +13,7 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
         builder.HasIndex(x => x.Token).IsUnique();
         builder.Property(x => x.ExpiresAt).IsRequired();
         builder.Property(x => x.IsRevoked).IsRequired();
-        builder.HasOne<User>()
+        builder.HasOne<User>(x => x.User)
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .IsRequired();

@@ -9,7 +9,7 @@ public class RefreshTokenRepository(ApplicationDbContext context)
 {
     public async Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
+        return await _dbSet.Include(x => x.User).FirstOrDefaultAsync(t => t.Token == token, cancellationToken);
     }
 
     public async Task<IEnumerable<RefreshToken>> GetByUserIdAsync(

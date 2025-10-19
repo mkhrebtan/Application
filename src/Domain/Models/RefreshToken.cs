@@ -10,5 +10,12 @@ public class RefreshToken(Guid userId, string token, DateTime expiresAt) : Model
 
     public DateTime ExpiresAt { get; private set; } = expiresAt;
 
-    public bool IsRevoked { get; private set; } = false;
+    public bool IsRevoked { get; private set; }
+
+    public User? User { get; set; }
+
+    public void Revoke()
+    {
+        IsRevoked = true;
+    }
 }
