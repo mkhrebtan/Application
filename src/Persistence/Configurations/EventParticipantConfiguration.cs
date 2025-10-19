@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Persistence.Configurations;
 
-public class EventParticipantConfiguration : IEntityTypeConfiguration<EventParticipant>
+internal sealed class EventParticipantConfiguration : IEntityTypeConfiguration<EventParticipant>
 {
     public void Configure(EntityTypeBuilder<EventParticipant> builder)
     {
