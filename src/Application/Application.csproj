@@ -7,8 +7,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Abstraction\" />
-      <Folder Include="Commands\Events\Create\" />
+        <ProjectReference Include="..\Domain\Domain.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0"/>
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Commands\EventParticipants\"/>
+        <Folder Include="Commands\Users\"/>
     </ItemGroup>
 
 </Project>

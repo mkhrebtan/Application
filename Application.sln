@@ -6,6 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "src\Persistence\Persistence.csproj", "{7C64B2AC-B98D-48E4-94B2-44379E0135BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{09E82E26-5166-463E-A5C5-6324D0B93BEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D577D237-5718-4985-A8C3-F77B93E58057}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.env = .env
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +22,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{82476638-24CB-4294-9EAD-7EB7A866BD10} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
 		{7C64B2AC-B98D-48E4-94B2-44379E0135BE} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
+		{09E82E26-5166-463E-A5C5-6324D0B93BEF} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{82476638-24CB-4294-9EAD-7EB7A866BD10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +33,9 @@ Global
 		{7C64B2AC-B98D-48E4-94B2-44379E0135BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C64B2AC-B98D-48E4-94B2-44379E0135BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C64B2AC-B98D-48E4-94B2-44379E0135BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
