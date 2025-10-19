@@ -25,17 +25,19 @@ public class Event : Model
         OrganizerId = organizerId;
     }
 
-    public string Title { get; set; }
+    public string Title { get; private set; }
 
-    public string Description { get; set; }
+    public string Description { get; private set; }
 
-    public DateTime Date { get; set; }
+    public DateTime Date { get; private set; }
 
-    public string Location { get; set; }
+    public string Location { get; private set; }
 
-    public int? Capacity { get; set; }
+    public int? Capacity { get; private set; }
 
-    public Guid OrganizerId { get; set; }
+    public bool IsPublic { get; private set; }
+
+    public Guid OrganizerId { get; private set; }
 
     public static Result<Event> Create(
         Guid organizerId,
@@ -43,6 +45,7 @@ public class Event : Model
         string description,
         DateTime date,
         string location,
+        bool isPublic,
         int? capacity = null)
     {
         var validationResult = Validate(title, description, date, location, capacity);
@@ -112,6 +115,12 @@ public class Event : Model
         }
 
         Capacity = capacity;
+        return Result.Success();
+    }
+
+    public Result UpdateVisibility(bool isPublic)
+    {
+        IsPublic = isPublic;
         return Result.Success();
     }
 

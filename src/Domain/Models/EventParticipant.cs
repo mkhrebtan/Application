@@ -14,15 +14,15 @@ public class EventParticipant(
 
     public Guid? UserId { get; private set; } = userId;
 
-    public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+    public DateTime JoinedAt { get; private set; } = DateTime.UtcNow;
 
-    public Guid? VisitorId { get; set; } = visitorId;
+    public Guid? VisitorId { get; private set; } = visitorId;
 
-    public string VisitorFirstName { get; set; } = visitorFirstName;
+    public string VisitorFirstName { get; private set; } = visitorFirstName;
 
-    public string VisitorLastName { get; set; } = visitorLastName;
+    public string VisitorLastName { get; private set; } = visitorLastName;
 
-    public string VisitorEmail { get; set; } = visitorEmail;
+    public string VisitorEmail { get; private set; } = visitorEmail;
 
     public Event? Event { get; set; }
 

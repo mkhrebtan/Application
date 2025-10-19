@@ -14,6 +14,7 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(x => x.Date).IsRequired();
         builder.Property(x => x.Location).IsRequired().HasMaxLength(Event.LocationMaxLength);
         builder.Property(x => x.Capacity);
+        builder.Property(x => x.IsPublic).IsRequired();
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.OrganizerId)
