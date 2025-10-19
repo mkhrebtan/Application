@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.env = .env
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{316B45B0-B163-4007-B1BD-7AB372286513}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,7 @@ Global
 		{82476638-24CB-4294-9EAD-7EB7A866BD10} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
 		{7C64B2AC-B98D-48E4-94B2-44379E0135BE} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
 		{09E82E26-5166-463E-A5C5-6324D0B93BEF} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
+		{316B45B0-B163-4007-B1BD-7AB372286513} = {3341F3A5-44BB-4C68-BD1A-FAD76BA11483}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{82476638-24CB-4294-9EAD-7EB7A866BD10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -37,5 +40,9 @@ Global
 		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E82E26-5166-463E-A5C5-6324D0B93BEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{316B45B0-B163-4007-B1BD-7AB372286513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{316B45B0-B163-4007-B1BD-7AB372286513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{316B45B0-B163-4007-B1BD-7AB372286513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{316B45B0-B163-4007-B1BD-7AB372286513}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
