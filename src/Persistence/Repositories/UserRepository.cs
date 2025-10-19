@@ -1,37 +1,18 @@
 ﻿using Domain.Models;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(ApplicationDbContext context) : GenericRepository<User>(context), IUserRepository
 {
-    public Task<User?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 
-    public void Add(User model)
+    public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Update(User model)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(User model)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<User?> GetByEmailAsync(string email)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> EmailExistsAsync(string email)
-    {
-        throw new NotImplementedException();
+        return await _dbSet.AnyAsync(u => u.Email == email, cancellationToken);
     }
 }
