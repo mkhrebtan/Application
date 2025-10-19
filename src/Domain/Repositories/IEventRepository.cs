@@ -6,5 +6,6 @@ public interface IEventRepository : IRepository<Event>
 {
     IQueryable<Event> GetEventsQueryable();
 
-    Task<IEnumerable<Event>> MaterializeEventsQueryAsync(IQueryable<Event> query);
+    Task<IEnumerable<Event>> MaterializeEventsQueryAsync(IQueryable<Event> query,
+        CancellationToken cancellationToken = default);
 }
