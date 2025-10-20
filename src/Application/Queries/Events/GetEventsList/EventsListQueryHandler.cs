@@ -15,7 +15,7 @@ internal sealed class EventsListQueryHandler(IEventsReadService eventsReadServic
         var userId = userContext.UserId;
         var visitorId = query.VisitorId;
 
-        if (userId is null && visitorId is null)
+        if ((userId is null || userId.Equals(Guid.Empty)) && visitorId is null)
         {
             return Result<EventsListQueryResponse>.Failure(Error.Validation(
                 "GetEventsList.InvalidRequester",

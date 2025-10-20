@@ -29,7 +29,7 @@ internal sealed class JoinEventCommandHandler : ICommandHandler<JoinEventCommand
     public async Task<Result> Handle(JoinEventCommand request, CancellationToken cancellationToken = default)
     {
         var userId = _userContext.UserId;
-        if (userId is null && request.VisitorId is null)
+        if ((userId is null || userId.Equals(Guid.Empty)) && request.VisitorId is null)
         {
             return Result.Failure(Error.Validation(
                 "JoinEvent.InvalidParticipant",
@@ -49,9 +49,9 @@ internal sealed class JoinEventCommandHandler : ICommandHandler<JoinEventCommand
                 "The organizer of the event cannot join as a participant."));
         }
 
-        var isAlreadyParticipant = userId.HasValue
+        var isAlreadyParticipant = !(userId is null || userId.Equals(Guid.Empty))
             ? await _eventParticipantRepository.IsUserParticipantInEventAsync(
-                userId.Value,
+                userId!.Value,
                 request.EventId,
                 cancellationToken)
             : await _eventParticipantRepository.IsVisitorParticipantInEventAsync(
@@ -76,7 +76,7 @@ internal sealed class JoinEventCommandHandler : ICommandHandler<JoinEventCommand
 
         var newParticipant = new EventParticipant(
             existingEvent.Id,
-            userId,
+            (userId is null || userId.Equals(Guid.Empty)) ? null : userId,
             request.VisitorId,
             request.VisitorFirstName,
             request.VisitorLastName,
