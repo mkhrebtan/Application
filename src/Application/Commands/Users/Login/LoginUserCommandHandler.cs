@@ -1,5 +1,5 @@
-using Application.Abstraction.Mediator;
 using Application.Authentication;
+using Application.Mediator;
 using Domain.Repositories;
 using Domain.Shared.ErrorHandling;
 

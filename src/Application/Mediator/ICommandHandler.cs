@@ -1,6 +1,6 @@
 ﻿using Domain.Shared.ErrorHandling;
 
-namespace Application.Abstraction.Mediator;
+namespace Application.Mediator;
 
 public interface ICommandHandler<in TCommand>
     where TCommand : ICommand

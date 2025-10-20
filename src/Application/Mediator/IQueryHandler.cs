@@ -1,6 +1,6 @@
 ﻿using Domain.Shared.ErrorHandling;
 
-namespace Application.Abstraction.Mediator;
+namespace Application.Mediator;
 
 public interface IQueryHandler<in TQuery, TResponse>
     where TQuery : IQuery<TResponse>

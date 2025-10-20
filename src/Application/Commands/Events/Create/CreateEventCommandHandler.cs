@@ -1,5 +1,5 @@
-﻿using Application.Abstraction.Mediator;
-using Application.Authentication;
+﻿using Application.Authentication;
+using Application.Mediator;
 using Domain.Abstraction.Interfaces;
 using Domain.Models;
 using Domain.Repositories;

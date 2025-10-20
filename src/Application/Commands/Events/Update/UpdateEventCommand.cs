@@ -1,5 +1,5 @@
-﻿using Application.Abstraction.Mediator;
-using Application.Common;
+﻿using Application.Common;
+using Application.Mediator;
 
 namespace Application.Commands.Events.Update;
 

@@ -1,4 +1,4 @@
-﻿using Application.Abstraction.Mediator;
+﻿using Application.Mediator;
 
 namespace Application.Commands.Users.RefreshToken;
 

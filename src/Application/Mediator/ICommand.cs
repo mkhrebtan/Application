@@ -1,4 +1,4 @@
-﻿namespace Application.Abstraction.Mediator;
+﻿namespace Application.Mediator;
 
 public interface ICommand : IBaseCommand
 {
