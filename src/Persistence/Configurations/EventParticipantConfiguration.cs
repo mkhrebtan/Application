@@ -31,7 +31,7 @@ internal sealed class EventParticipantConfiguration : IEntityTypeConfiguration<E
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Event>(x => x.Event)
-            .WithMany()
+            .WithMany(x => x.EventParticipants)
             .HasForeignKey(x => x.EventId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
