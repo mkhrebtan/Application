@@ -42,6 +42,13 @@ internal sealed class JoinEventCommandHandler : ICommandHandler<JoinEventCommand
             return Result.Failure(Error.NotFound("Event.NotFound", $"Event with ID {request.EventId} was not found."));
         }
 
+        if (existingEvent.OrganizerId == userId)
+        {
+            return Result.Failure(Error.Validation(
+                "JoinEvent.OrganizerCannotJoin",
+                "The organizer of the event cannot join as a participant."));
+        }
+
         var isAlreadyParticipant = userId.HasValue
             ? await _eventParticipantRepository.IsUserParticipantInEventAsync(
                 userId.Value,
