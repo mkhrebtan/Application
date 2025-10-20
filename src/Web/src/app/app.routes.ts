@@ -5,6 +5,7 @@ import { Main } from './layout/main/main';
 import { MyEvents } from './pages/my-events/my-events';
 import { CreateEvent } from './pages/create-event/create-event';
 import { EventDetails } from './pages/event-details/event-details';
+import { authGuard } from './core/auth/auth-guard/auth-guard';
 
 export const routes: Routes = [
   {
@@ -20,11 +21,13 @@ export const routes: Routes = [
         path: 'my-events',
         component: MyEvents,
         title: 'My Events',
+        canActivate: [authGuard],
       },
       {
         path: 'create-event',
         component: CreateEvent,
         title: 'Create Event',
+        canActivate: [authGuard],
       },
       {
         path: 'events/:id',
