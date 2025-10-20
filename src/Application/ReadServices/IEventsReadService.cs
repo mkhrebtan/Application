@@ -6,7 +6,8 @@ namespace Application.ReadServices;
 public interface IEventsReadService
 {
     Task<IPagedList<EventListingDto>> GetEventsAsync(
-        Guid requesterId,
+        Guid? userId,
+        Guid? visitorId,
         string? searchTerm,
         bool? today,
         bool? weekend,

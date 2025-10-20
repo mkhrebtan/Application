@@ -12,8 +12,10 @@ internal sealed class EventsListQueryHandler(IEventsReadService eventsReadServic
         GetEventsListQuery query,
         CancellationToken cancellationToken = default)
     {
-        var requesterId = userContext.UserId ?? query.VisitorId;
-        if (requesterId is null)
+        var userId = userContext.UserId;
+        var visitorId = query.VisitorId;
+
+        if (userId is null && visitorId is null)
         {
             return Result<EventsListQueryResponse>.Failure(Error.Validation(
                 "GetEventsList.InvalidRequester",
@@ -21,7 +23,8 @@ internal sealed class EventsListQueryHandler(IEventsReadService eventsReadServic
         }
 
         var pagedEvents = await eventsReadService.GetEventsAsync(
-            requesterId.Value,
+            userId,
+            visitorId,
             query.SearchTerm,
             query.Today,
             query.Weekend,

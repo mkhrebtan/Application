@@ -8,7 +8,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
     : IEventsReadService
 {
     public async Task<IPagedList<EventListingDto>> GetEventsAsync(
-        Guid requesterId,
+        Guid? userId,
+        Guid? visitorId,
         string? searchTerm,
         bool? today,
         bool? weekend,
@@ -47,8 +48,10 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
             e.Capacity,
             e.EventParticipants.Count,
             new RequesterStatusDto(
-                e.EventParticipants.Any(ep => ep.UserId == requesterId || ep.VisitorId == requesterId),
-                e.OrganizerId == requesterId)));
+                e.EventParticipants.Any(ep =>
+                    (userId.HasValue && ep.UserId == userId.Value) ||
+                    (visitorId.HasValue && ep.VisitorId == visitorId.Value)),
+                userId.HasValue && e.OrganizerId == userId.Value)));
 
         return await pagedList.Create(eventListingDtos, pageNumber, pageSize);
     }
