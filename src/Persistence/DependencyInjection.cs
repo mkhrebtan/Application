@@ -1,8 +1,11 @@
-﻿using Domain.Abstraction.Interfaces;
+﻿using Application.Queries;
+using Application.ReadServices;
+using Domain.Abstraction.Interfaces;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.ReadServices;
 using Persistence.Repositories;
 
 namespace Persistence;
@@ -18,6 +21,9 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEventParticipantRepository, EventParticipantRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+        services.AddTransient(typeof(IPagedList<>), typeof(PagedList<>));
+        services.AddScoped<IEventsReadService, EventsReadService>();
 
         return services;
     }

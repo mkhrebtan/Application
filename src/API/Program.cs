@@ -10,6 +10,7 @@ using Application.Commands.Users.Login;
 using Application.Commands.Users.RefreshToken;
 using Application.Commands.Users.Signup;
 using Application.Mediator;
+using Application.Queries.GetEventsList;
 using Infrastructure;
 using Persistence;
 
@@ -79,7 +80,6 @@ app.MapPost("/auth/refresh-token", async (
     })
     .WithTags("Auth");
 
-// Event Endpoints
 app.MapPost("/events", async (
         CreateEventCommand request,
         ICommandHandler<CreateEventCommand, CreateEventCommandResponse> handler,
@@ -137,6 +137,22 @@ app.MapPost("/events/{id:guid}/leave", async (
         request = request with { EventId = id, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
+    })
+    .WithTags("Events");
+
+app.MapGet("/events", async (
+        Guid? visitorId,
+        string? searchTerm,
+        bool? today,
+        bool? weekend,
+        int pageNumber,
+        int pageSize,
+        IQueryHandler<GetEventsListQuery, EventsListQueryResponse> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new GetEventsListQuery(visitorId, searchTerm, today, weekend, pageNumber, pageSize);
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
     .WithTags("Events");
 
