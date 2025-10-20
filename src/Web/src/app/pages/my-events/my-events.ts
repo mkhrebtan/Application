@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CalendarView } from '../../features/calendar/calendar-view/calendar-view';
 import { HeroSection } from '../../layout/hero-section/hero-section';
-import { EventService } from '../../core/services/event-service';
+import { EventService } from '../../core/event-service/event-service';
 import { IEvent } from '../../features/event/models/event';
 
 @Component({

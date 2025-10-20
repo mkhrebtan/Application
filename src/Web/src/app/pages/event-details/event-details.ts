@@ -2,11 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { HeroSection } from '../../layout/hero-section/hero-section';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IEvent } from '../../features/event/models/event';
-import { EventService } from '../../core/services/event-service';
+import { EventService } from '../../core/event-service/event-service';
 import { DatePipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
-import { faLocationDot, faUsers, faInfinity } from '@fortawesome/free-solid-svg-icons';
+import { faInfinity, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { EventState } from '../../features/event/event-listing-card/event-listing-card';
 import { EditEventDialog } from '../../features/event/edit-event-dialog/edit-event-dialog';
 
@@ -33,19 +33,16 @@ export class EventDetails {
     'Laura',
     'Michael',
   ];
-  private activatedRoute = inject(ActivatedRoute);
-  private eventService = inject(EventService);
-  private router = inject(Router);
-
   protected readonly faClock = faClock;
   protected readonly faLocationDot = faLocationDot;
   protected readonly faUsers = faUsers;
   protected readonly faInfinity = faInfinity;
-
   protected readonly EventState = EventState;
   protected eventState = signal(EventState.CanJoin);
-
   protected editDialogIsOpen = signal(false);
+  private activatedRoute = inject(ActivatedRoute);
+  private eventService = inject(EventService);
+  private router = inject(Router);
 
   constructor() {
     let eventId: number = 0;

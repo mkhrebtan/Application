@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, inject, signal, Output, EventEmitter } from '@angular/core';
-import { IEvent } from '../models/event';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { faInfinity, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { EventListingView } from '../models/event-listing-view';
 import { Router } from '@angular/router';
+import { IEventListingModel } from '../models/event-listing-model';
 
 @Component({
   selector: 'app-event-listing-card',
@@ -14,11 +14,9 @@ import { Router } from '@angular/router';
   styles: ``,
 })
 export class EventListingCard implements OnInit {
-  @Input() event!: IEvent;
+  @Input() event!: IEventListingModel;
   @Input() viewMode: EventListingView = EventListingView.Grid;
-  @Output() joinClick = new EventEmitter<IEvent>();
-
-  private router = inject(Router);
+  @Output() joinClick = new EventEmitter<IEventListingModel>();
   protected readonly faInfinity = faInfinity;
   protected readonly faClock = faClock;
   protected readonly faLocationDot = faLocationDot;
@@ -26,6 +24,7 @@ export class EventListingCard implements OnInit {
   protected readonly EventListingView = EventListingView;
   protected readonly EventState = EventState;
   protected eventState = signal(EventState.CanJoin);
+  private router = inject(Router);
 
   ngOnInit() {
     if (this.event.capacity && this.event.participants >= this.event.capacity) {
