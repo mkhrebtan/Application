@@ -1,6 +1,6 @@
 ﻿using Application.Mediator;
 
-namespace Application.Queries.GetEventsList;
+namespace Application.Queries.Events.GetEventsList;
 
 public record GetEventsListQuery(
     Guid? VisitorId,

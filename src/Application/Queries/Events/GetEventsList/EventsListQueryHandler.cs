@@ -3,7 +3,7 @@ using Application.Mediator;
 using Application.ReadServices;
 using Domain.Shared.ErrorHandling;
 
-namespace Application.Queries.GetEventsList;
+namespace Application.Queries.Events.GetEventsList;
 
 internal sealed class EventsListQueryHandler(IEventsReadService eventsReadService, IUserContext userContext)
     : IQueryHandler<GetEventsListQuery, EventsListQueryResponse>
