@@ -2,4 +2,4 @@
 
 namespace Application.Commands.Users.Login;
 
-public record LoginUserCommand(string Email, string Password) : ICommand<LoginUserCommandResponse>;
+public record LoginUserCommand(string Email, string Password, Guid VisitorId) : ICommand<LoginUserCommandResponse>;

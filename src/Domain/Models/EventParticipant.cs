@@ -27,4 +27,13 @@ public class EventParticipant(
     public Event? Event { get; set; }
 
     public User? User { get; set; }
+
+    public void AssignToUser(Guid userId)
+    {
+        UserId = userId;
+        VisitorId = null;
+        VisitorFirstName = null;
+        VisitorLastName = null;
+        VisitorEmail = null;
+    }
 }

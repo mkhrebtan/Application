@@ -8,6 +8,7 @@ namespace Application.Commands.Users.Login;
 
 internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, LoginUserCommandResponse>
 {
+    private readonly IEventParticipantRepository _eventParticipantRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenProvider _tokenProvider;
@@ -19,13 +20,15 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
         ITokenProvider tokenProvider,
         IPasswordHasher passwordHasher,
         IRefreshTokenRepository refreshTokenRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IEventParticipantRepository eventParticipantRepository)
     {
         _userRepository = userRepository;
         _tokenProvider = tokenProvider;
         _passwordHasher = passwordHasher;
         _refreshTokenRepository = refreshTokenRepository;
         _unitOfWork = unitOfWork;
+        _eventParticipantRepository = eventParticipantRepository;
     }
 
     public async Task<Result<LoginUserCommandResponse>> Handle(
@@ -38,6 +41,12 @@ internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand
             return Result<LoginUserCommandResponse>.Failure(
                 Error.NotFound("User.InvalidCredentials", "Invalid email or password."));
         }
+
+        await _eventParticipantRepository.MergeVisitorParticipantsAsync(
+            request.VisitorId,
+            user.Id,
+            user.Email,
+            cancellationToken);
 
         var accessToken = _tokenProvider.GenerateAccessToken(user);
         var refreshToken = _tokenProvider.GenerateRefreshToken(user);

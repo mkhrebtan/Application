@@ -13,5 +13,9 @@ internal sealed class LoginUserCommandValidator : AbstractValidator<LoginUserCom
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")
             .MinimumLength(6).WithMessage("Password must be at least 6 characters long.");
+
+        RuleFor(x => x.VisitorId)
+            .NotEmpty().WithMessage("VisitorId is required.")
+            .NotEqual(Guid.Empty).WithMessage("VisitorId must be a valid GUID.");
     }
 }

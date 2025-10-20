@@ -4,10 +4,6 @@ namespace Domain.Repositories;
 
 public interface IEventParticipantRepository : IRepository<EventParticipant>
 {
-    Task<IEnumerable<EventParticipant>> GetByEventIdAsync(Guid eventId, CancellationToken cancellationToken = default);
-
-    Task<IEnumerable<EventParticipant>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
-
     Task<EventParticipant?> GetByUserIdAndEventIdAsync(
         Guid userId,
         Guid eventId,
@@ -26,4 +22,10 @@ public interface IEventParticipantRepository : IRepository<EventParticipant>
         CancellationToken cancellationToken = default);
 
     Task<int> GetEventParticipantCountAsync(Guid eventId, CancellationToken cancellationToken = default);
+
+    Task MergeVisitorParticipantsAsync(
+        Guid visitorId,
+        Guid userId,
+        string userEmail,
+        CancellationToken cancellationToken = default);
 }
