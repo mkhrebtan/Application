@@ -10,7 +10,10 @@ using Application.Commands.Users.Login;
 using Application.Commands.Users.RefreshToken;
 using Application.Commands.Users.Signup;
 using Application.Mediator;
-using Application.Queries.GetEventsList;
+using Application.Queries.Events.GetEvent;
+using Application.Queries.Events.GetEventParticipants;
+using Application.Queries.Events.GetEventsList;
+using Application.Queries.Events.GetUserEvents;
 using Infrastructure;
 using Persistence;
 
@@ -151,6 +154,39 @@ app.MapGet("/events", async (
         CancellationToken cancellationToken) =>
     {
         var request = new GetEventsListQuery(visitorId, searchTerm, today, weekend, pageNumber, pageSize);
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Events");
+
+app.MapGet("/events/{id:guid}", async (
+        Guid id,
+        Guid? visitorId,
+        IQueryHandler<GetEventQuery, GetEventQueryResponse> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new GetEventQuery(id, visitorId);
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Events");
+
+app.MapGet("/events/me", async (
+        IQueryHandler<GetUserEventsQuery, GetUserEventsQueryResponse> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new GetUserEventsQuery();
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Events");
+
+app.MapGet("/events/{id:guid}/participants", async (
+        Guid id,
+        IQueryHandler<GetEventParticipantsQuery, GetEventParticipantsQueryResponse> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new GetEventParticipantsQuery(id);
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
