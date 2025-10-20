@@ -1,4 +1,5 @@
 ﻿using Application.Abstraction.Mediator;
+using Application.Authentication;
 using Domain.Abstraction.Interfaces;
 using Domain.Models;
 using Domain.Repositories;
@@ -10,19 +11,29 @@ internal sealed class CreateEventCommandHandler : ICommandHandler<CreateEventCom
 {
     private readonly IEventRepository _eventRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserContext _userContext;
 
-    public CreateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork)
+    public CreateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork, IUserContext userContext)
     {
         _eventRepository = eventRepository;
         _unitOfWork = unitOfWork;
+        _userContext = userContext;
     }
 
     public async Task<Result<CreateEventCommandResponse>> Handle(
         CreateEventCommand request,
         CancellationToken cancellationToken = default)
     {
+        var userId = _userContext.UserId;
+        if (userId is null)
+        {
+            return Result<CreateEventCommandResponse>.Failure(Error.Problem(
+                "CreateEvent.Unauthenticated",
+                "User must be authenticated to create an event."));
+        }
+
         var newEventResult = Event.Create(
-            Guid.NewGuid(),
+            userId.Value,
             request.Title,
             request.Description,
             request.Date,

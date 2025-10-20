@@ -1,4 +1,5 @@
 ﻿using Application.Abstraction.Mediator;
+using Application.Authentication;
 using Domain.Abstraction.Interfaces;
 using Domain.Repositories;
 using Domain.Shared.ErrorHandling;
@@ -9,19 +10,36 @@ internal sealed class UpdateEventCommandHandler : ICommandHandler<UpdateEventCom
 {
     private readonly IEventRepository _eventRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserContext _userContext;
 
-    public UpdateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork)
+    public UpdateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork, IUserContext userContext)
     {
         _eventRepository = eventRepository;
         _unitOfWork = unitOfWork;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(UpdateEventCommand request, CancellationToken cancellationToken = default)
     {
+        var userId = _userContext.UserId;
+        if (userId == null)
+        {
+            return Result.Failure(Error.Problem(
+                "UpdateEvent.Unauthenticated",
+                "User must be authenticated to update an event."));
+        }
+
         var existingEvent = await _eventRepository.GetByIdAsync(request.EventId, cancellationToken);
         if (existingEvent is null)
         {
             return Result.Failure(Error.NotFound("Event.NotFound", $"Event with ID {request.EventId} was not found."));
+        }
+
+        if (existingEvent.OrganizerId != userId)
+        {
+            return Result.Failure(Error.Problem(
+                "UpdateEvent.Forbidden",
+                "User does not have permission to update this event."));
         }
 
         var updateResults = new[]

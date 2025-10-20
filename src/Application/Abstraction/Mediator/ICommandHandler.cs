@@ -5,7 +5,7 @@ namespace Application.Abstraction.Mediator;
 public interface ICommandHandler<in TCommand>
     where TCommand : ICommand
 {
-    Task<Result> Handle(TCommand command, CancellationToken cancellationToken = default);
+    Task<Result> Handle(TCommand request, CancellationToken cancellationToken = default);
 }
 
 public interface ICommandHandler<in TCommand, TResponse>
