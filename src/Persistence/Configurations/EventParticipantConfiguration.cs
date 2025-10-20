@@ -15,8 +15,8 @@ internal sealed class EventParticipantConfiguration : IEntityTypeConfiguration<E
         builder.HasIndex(x => x.VisitorId);
         builder.HasIndex(x => x.VisitorEmail);
 
-        builder.HasIndex(x => new { x.EventId, x.VisitorId }).IsUnique();
-        builder.HasIndex(x => new { x.EventId, x.UserId }).IsUnique();
+        builder.HasIndex(x => new { x.EventId, x.VisitorId, }).IsUnique();
+        builder.HasIndex(x => new { x.EventId, x.UserId, }).IsUnique();
 
         builder.Property(x => x.VisitorFirstName)
             .HasMaxLength(User.FirstNameMaxLength);

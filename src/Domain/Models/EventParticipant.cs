@@ -6,9 +6,9 @@ public class EventParticipant(
     Guid eventId,
     Guid? userId = null,
     Guid? visitorId = null,
-    string visitorFirstName = "",
-    string visitorLastName = "",
-    string visitorEmail = "") : Model
+    string? visitorFirstName = null,
+    string? visitorLastName = null,
+    string? visitorEmail = null) : Model
 {
     public Guid EventId { get; private set; } = eventId;
 
@@ -18,11 +18,11 @@ public class EventParticipant(
 
     public Guid? VisitorId { get; private set; } = visitorId;
 
-    public string VisitorFirstName { get; private set; } = visitorFirstName;
+    public string? VisitorFirstName { get; private set; } = visitorFirstName;
 
-    public string VisitorLastName { get; private set; } = visitorLastName;
+    public string? VisitorLastName { get; private set; } = visitorLastName;
 
-    public string VisitorEmail { get; private set; } = visitorEmail;
+    public string? VisitorEmail { get; private set; } = visitorEmail;
 
     public Event? Event { get; set; }
 

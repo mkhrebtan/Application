@@ -21,12 +21,38 @@ public class EventParticipantRepository(ApplicationDbContext context)
         return await _dbSet.Where(ep => ep.UserId == userId).Include(ep => ep.Event).ToListAsync(cancellationToken);
     }
 
+    public async Task<EventParticipant?> GetByUserIdAndEventIdAsync(
+        Guid userId,
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.FirstOrDefaultAsync(ep => ep.UserId == userId && ep.EventId == eventId, cancellationToken);
+    }
+
+    public async Task<EventParticipant?> GetByVisitorIdAndEventIdAsync(
+        Guid visitorId,
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.FirstOrDefaultAsync(
+            ep => ep.VisitorId == visitorId && ep.EventId == eventId,
+            cancellationToken);
+    }
+
     public async Task<bool> IsUserParticipantInEventAsync(
         Guid userId,
         Guid eventId,
         CancellationToken cancellationToken = default)
     {
         return await _dbSet.AnyAsync(ep => ep.UserId == userId && ep.EventId == eventId, cancellationToken);
+    }
+
+    public async Task<bool> IsVisitorParticipantInEventAsync(
+        Guid visitorId,
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AnyAsync(ep => ep.VisitorId == visitorId && ep.EventId == eventId, cancellationToken);
     }
 
     public async Task<int> GetEventParticipantCountAsync(Guid eventId, CancellationToken cancellationToken = default)
