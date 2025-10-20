@@ -15,6 +15,7 @@ public class Event : Model
         string description,
         DateTime date,
         string location,
+        bool isPublic,
         int? capacity = null)
     {
         Title = title;
@@ -22,6 +23,7 @@ public class Event : Model
         Date = date;
         Location = location;
         Capacity = capacity;
+        IsPublic = isPublic;
         OrganizerId = organizerId;
     }
 
@@ -39,6 +41,8 @@ public class Event : Model
 
     public Guid OrganizerId { get; private set; }
 
+    public List<EventParticipant> EventParticipants { get; private set; } = [];
+
     public static Result<Event> Create(
         Guid organizerId,
         string title,
@@ -54,7 +58,7 @@ public class Event : Model
             return Result<Event>.Failure(validationResult.Error);
         }
 
-        var eventInstance = new Event(organizerId, title, description, date, location, capacity);
+        var eventInstance = new Event(organizerId, title, description, date, location, isPublic, capacity);
         return Result<Event>.Success(eventInstance);
     }
 

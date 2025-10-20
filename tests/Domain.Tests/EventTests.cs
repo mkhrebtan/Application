@@ -55,6 +55,7 @@ public class EventTests
         result.Value.Date.Should().Be(_futureDate);
         result.Value.Location.Should().Be(_validLocation);
         result.Value.Capacity.Should().Be(_validCapacity);
+        result.Value.IsPublic.Should().BeTrue();
         result.Value.OrganizerId.Should().Be(_organizerId);
     }
 
