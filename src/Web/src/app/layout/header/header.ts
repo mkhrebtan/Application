@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { faArrowRightFromBracket, faListUl, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar, faUser } from '@fortawesome/free-regular-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -19,6 +19,7 @@ export class Header {
   protected readonly faUser = faUser;
   protected readonly faArrowRightFromBracket = faArrowRightFromBracket;
   protected authService = inject(AuthService);
+  protected isMobileMenuOpen = signal(false);
   private router = inject(Router);
 
   logout(): void {

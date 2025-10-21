@@ -13,7 +13,6 @@ import { HeroSection } from '../../layout/hero-section/hero-section';
 import { ToggleOption } from '../../shared/models/toggle-option';
 import { ViewToggle } from '../../shared/components/view-toggle/view-toggle';
 import { EventService } from '../../core/event-service/event-service';
-import { JoinEventDialog } from '../../features/event/join-event-dialog/join-event-dialog';
 import {
   combineLatest,
   debounceTime,
@@ -37,7 +36,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
     EventListingCard,
     HeroSection,
     ViewToggle,
-    JoinEventDialog,
     AsyncPipe,
     ReactiveFormsModule,
   ],
@@ -54,7 +52,6 @@ export class Events {
 
   protected selectedFilter = signal(EventFilter.AllEvents);
   protected viewMode = signal(EventListingView.Grid);
-  protected joinEventDialogIsOpen = signal(false);
   protected readonly viewOptions: ToggleOption<EventListingView>[] = [
     { label: 'Grid View', value: EventListingView.Grid, icon: faTableCellsLarge },
     { label: 'List View', value: EventListingView.List, icon: faListUl },
@@ -81,21 +78,6 @@ export class Events {
 
   protected selectFilter(filter: EventFilter): void {
     this.selectedFilter.set(filter);
-  }
-
-  protected onJoinEventClick(event: IEventListingModel) {
-    this.joinEventDialogIsOpen.set(true);
-    document.body.style.overflow = 'hidden';
-  }
-
-  protected closeJoinEventDialog() {
-    this.joinEventDialogIsOpen.set(false);
-    document.body.style.overflow = 'auto';
-  }
-
-  protected onJoinEventFormSubmit() {
-    this.closeJoinEventDialog();
-    // Additional logic for handling the form submission can be added here
   }
 
   private loadEvents(

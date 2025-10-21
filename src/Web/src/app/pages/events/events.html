@@ -2,7 +2,7 @@
   <app-hero-section [description]="heroDescription" [title]="heroTitle"/>
   <section class="flex items-center justify-between">
     <!--          <h2 class="text-2xl">Upcoming Events</h2>-->
-    <div class="flex items-center gap-8 w-full h-full">
+    <div class="flex flex-col sm:flex-row items-center gap-8 w-full h-full">
       <div class="relative flex items-center min-w-1/4">
         <fa-icon [icon]="faMagnifyingGlass" class="absolute left-4 text-gray-400"/>
         <input
@@ -13,7 +13,7 @@
           type="text"
         />
       </div>
-      <div class="flex gap-2">
+      <div class="flex gap-2 text-sm md:text-base">
         <button
           (click)="selectFilter(Filter.AllEvents)"
           [class.active]="selectedFilter() === Filter.AllEvents"
@@ -46,20 +46,21 @@
         </button>
       </div>
     </div>
-    <app-view-toggle [(value)]="viewMode" [options]="viewOptions"/>
+    <app-view-toggle [(value)]="viewMode" [options]="viewOptions" class="hidden md:block"/>
   </section>
   <section [class.flex-col]="viewMode() === EventListingView.List"
            [class.flex]="viewMode() === EventListingView.List"
-           [class.grid-cols-3]="viewMode() === EventListingView.Grid"
            [class.grid]="viewMode() === EventListingView.Grid"
            [class.max-w-5xl]="viewMode() === EventListingView.List"
+           [class.md:grid-cols-3]="viewMode() === EventListingView.Grid"
            [class.self-center]="viewMode() === EventListingView.List"
+           [class.sm:grid-cols-2]="viewMode() === EventListingView.Grid"
            [class]="{ 'min-w-2/3': viewMode() === EventListingView.List }"
            class="gap-6">
     @let eventsPagedList = events$ | async;
     @if (eventsPagedList) {
       @for (event of eventsPagedList.items; track event.id) {
-        <app-event-listing-card (joinClick)="onJoinEventClick($event)" [event]="event" [viewMode]="viewMode()"/>
+        <app-event-listing-card [event]="event" [viewMode]="viewMode()"/>
       }
 
       @if (eventsPagedList.totalCount === 0) {
@@ -72,7 +73,3 @@
     }
   </section>
 </div>
-
-@if (joinEventDialogIsOpen()) {
-  <app-join-event-dialog (closeDialog)="closeJoinEventDialog()" (joinEventSubmit)="onJoinEventFormSubmit()"/>
-}

@@ -139,11 +139,12 @@ app.MapDelete("/events/{id:guid}", async (
 
 app.MapPost("/events/{id:guid}/join", async (
         Guid id,
+        [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
         JoinEventCommand request,
         ICommandHandler<JoinEventCommand> handler,
         CancellationToken cancellationToken) =>
     {
-        request = request with { EventId = id, };
+        request = request with { EventId = id, VisitorId = visitorId, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
     })
@@ -151,11 +152,12 @@ app.MapPost("/events/{id:guid}/join", async (
 
 app.MapPost("/events/{id:guid}/leave", async (
         Guid id,
+        [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
         LeaveEventCommand request,
         ICommandHandler<LeaveEventCommand> handler,
         CancellationToken cancellationToken) =>
     {
-        request = request with { EventId = id, };
+        request = request with { EventId = id, VisitorId = visitorId, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
     })

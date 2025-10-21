@@ -1,5 +1,5 @@
 ﻿<div class="flex flex-col gap-6">
-  <section class="flex items-center justify-between">
+  <section class="flex flex-col gap-2 md:flex-row items-center justify-between">
     <div class="flex gap-4 items-center">
       <button
         (click)="decrementDate()"
@@ -7,7 +7,7 @@
       >
         <fa-icon [icon]="faChevronLeft" class="text-sm"/>
       </button>
-      <span class="text-xl font-semibold">
+      <span class="text-sm md:text-xl font-semibold">
          {{ displayedDateRange() }}
       </span>
       <button
@@ -26,7 +26,7 @@
         class="grid grid-cols-7 text-center bg-gray-200 border-b rounded-t-xl border-gray-300"
       >
         @for (day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; track day) {
-          <div class="p-2">{{ day }}</div>
+          <div class="p-1 md:p-2">{{ day }}</div>
         }
       </div>
       <div class="rounded-b-xl border-l border-b border-r border-gray-300 overflow-hidden">
@@ -48,7 +48,7 @@
   }
 
   @if (viewMode() === calendarViewMode.Week) {
-    <section class="grid grid-cols-7 gap-4">
+    <section class="flex flex-col md:grid md:grid-cols-7 gap-4">
       @for (day of currentWeek(); track day) {
         <app-day-card
           [date]="day.date"

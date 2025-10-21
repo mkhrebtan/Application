@@ -6,8 +6,8 @@
     <p class="mt-2 text-center text-sm text-gray-600">
       Or
       <a
-        routerLink="/login"
         class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+        routerLink="/login"
       >
         log in to your existing account
       </a>
@@ -17,26 +17,29 @@
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
       <form
-        id="signupForm"
-        [formGroup]="signupForm"
         (ngSubmit)="onSubmit()"
+        [formGroup]="signupForm"
         class="flex flex-col gap-6"
+        id="signupForm"
       >
         <div class="grid grid-cols-2 gap-4">
-          <app-form-input [control]="firstName!" [type]="'text'" [label]="'First name'" [id]="'firstName'" [autocomplete]="'given-name'" [placeholder]="'First name'">
+          <app-form-input [autocomplete]="'given-name'" [control]="firstName!" [id]="'firstName'" [label]="'First name'"
+                          [placeholder]="'First name'" [type]="'text'">
             @if (firstName?.hasError('required')) {
               <span error-message>First name is required</span>
             }
           </app-form-input>
 
-          <app-form-input [control]="lastName!" [type]="'text'" [label]="'Last name'" [id]="'lastName'" [autocomplete]="'family-name'" [placeholder]="'Last name'">
+          <app-form-input [autocomplete]="'family-name'" [control]="lastName!" [id]="'lastName'" [label]="'Last name'"
+                          [placeholder]="'Last name'" [type]="'text'">
             @if (lastName?.hasError('required')) {
               <span error-message>Last name is required</span>
             }
           </app-form-input>
         </div>
 
-        <app-form-input [control]="email!" [type]="'email'" [label]="'Email address'" [id]="'email'" [autocomplete]="'email'" [placeholder]="'Enter your email'">
+        <app-form-input [autocomplete]="'email'" [control]="email!" [id]="'email'" [label]="'Email address'"
+                        [placeholder]="'Enter your email'" [type]="'email'">
           @if (email?.hasError('required')) {
             <span error-message>Email is required</span>
           } @else if (email?.hasError('email')) {
@@ -44,7 +47,8 @@
           }
         </app-form-input>
 
-        <app-form-input [control]="password!" [type]="'password'" [label]="'Password'" [id]="'password'" [autocomplete]="'current-password'" [placeholder]="'Create a password'">
+        <app-form-input [autocomplete]="'current-password'" [control]="password!" [id]="'password'" [label]="'Password'"
+                        [placeholder]="'Create a password'" [type]="'password'">
           @if (password?.hasError('required')) {
             <span error-message>Password is required</span>
           } @else if (password?.hasError('minlength')) {
@@ -54,9 +58,9 @@
 
         <app-confirm-password-input
           [control]="confirmPassword!"
-          [label]="'Confirm Password'"
-          [id]="'confirmPassword'"
           [hasPasswordMismatchError]="signupForm.hasError('passwordMismatch')"
+          [id]="'confirmPassword'"
+          [label]="'Confirm Password'"
         >
           @if (confirmPassword?.hasError('required')) {
             <span error-message-confirm>Please confirm your password</span>
@@ -67,13 +71,13 @@
 
         <div>
           <button
-            type="submit"
-            form="signupForm"
             [disabled]="signupForm.invalid || isLoading()"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer transition-all duration-300"
+            form="signupForm"
+            type="submit"
           >
             @if (isLoading()) {
-              <fa-icon [icon]="faSpinner" class="animate-spin mr-2" />
+              <fa-icon [icon]="faSpinner" class="animate-spin mr-2"/>
               Creating account...
             } @else {
               Create account
@@ -86,7 +90,7 @@
         <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
           <div class="flex">
             <div class="flex-shrink-0">
-              <fa-icon [icon]="faCircleXmark" class="h-5 w-5 text-red-400" />
+              <fa-icon [icon]="faCircleXmark" class="h-5 w-5 text-red-400"/>
             </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium text-red-800">
@@ -104,7 +108,7 @@
         <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
           <div class="flex">
             <div class="flex-shrink-0">
-              <fa-icon [icon]="faCircleCheck" class="h-5 w-5 text-green-400" />
+              <fa-icon [icon]="faCircleCheck" class="h-5 w-5 text-green-400"/>
             </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium text-green-800">

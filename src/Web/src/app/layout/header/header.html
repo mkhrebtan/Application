@@ -1,78 +1,79 @@
-﻿<div class="p-5 lg:grid lg:grid-cols-3 items-center sticky top-0 shadow-sm z-10 backdrop-blur-xs bg-white/70">
-  <nav class="col-start-2 flex justify-center">
+﻿<div
+  class="p-2 sm:p-5 flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-0 items-center sticky top-0 shadow-sm z-10 backdrop-blur-xs bg-white/70">
+  <nav class="w-full lg:w-auto col-start-1 lg:col-start-2 flex justify-center md:justify-start lg:justify-center">
     <div
       class="border-1 border-gray-300 rounded-4xl bg-white p-1 flex shadow-sm"
     >
       <button
         [routerLinkActiveOptions]="{ exact: true }"
-        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+        class="flex items-center gap-2 px-2 sm:px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
                     hover:-translate-y-px hover:text-black"
         routerLink="/events"
         routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
       >
         <fa-icon [icon]="faListUl"/>
-        <span>Events</span>
+        <span class="hidden sm:inline">Events</span>
       </button>
 
       <button
         [routerLinkActiveOptions]="{ exact: true }"
-        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+        class="flex items-center gap-2 px-2 sm:px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
                     hover:-translate-y-px hover:text-black"
         routerLink="/my-events"
         routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
       >
         <fa-icon [icon]="faCalendar"/>
-        <span>My Events</span>
+        <span class="hidden sm:inline">My Events</span>
       </button>
 
       <button
         [routerLinkActiveOptions]="{ exact: true }"
-        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+        class="flex items-center gap-2 px-2 sm:px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
                     hover:-translate-y-px hover:text-black"
         routerLink="/create-event"
         routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
       >
         <fa-icon [icon]="faPlus"/>
-        <span>Create Event</span>
+        <span class="hidden sm:inline">Create Event</span>
       </button>
     </div>
   </nav>
 
-  <div class="col-start-3 flex justify-center">
+  <div class="w-full lg:w-auto col-start-2 lg:col-start-3 flex justify-center md:justify-end lg:justify-center">
     <div
       class="flex justify-center h-full bg-white border border-gray-300 rounded-4xl backdrop-blur-md p-1 shadow-sm"
     >
       @if (authService.isAuthenticated()) {
-        <div class="flex items-center gap-2 px-4 pb-1 pt-1 whitespace-nowrap">
+        <div class="flex items-center gap-2 px-2 sm:px-4 pb-1 pt-1 whitespace-nowrap">
           <div class="flex items-center gap-2">
             <fa-icon [icon]="faUser"/>
             @let user = authService.userData$ | async;
             @if (user) {
-              <p>{{ `${user.firstName} ${user.lastName}` }}</p>
+              <p class="hidden sm:block">{{ `${user.firstName} ${user.lastName}` }}</p>
             }
           </div>
         </div>
         <div class="w-px m-1 bg-gray-400 opacity-30"></div>
         <button
           (click)="logout()"
-          class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer rounded-r-4xl transition-colors hover:bg-gray-100 hover:text-red-500">
+          class="flex items-center gap-2 px-2 sm:px-4 pb-1 pt-1 cursor-pointer rounded-r-4xl transition-colors hover:bg-gray-100 hover:text-red-500">
           <fa-icon [icon]="faArrowRightFromBracket" class="text-sm"/>
         </button>
       } @else {
         <button
-          class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
+          class="flex items-center gap-2 px-2 sm:px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
                     hover:bg-gray-200"
           routerLink="/login"
         >
-          <span>Log In</span>
+          <span class="text-sm sm:text-base">Log In</span>
         </button>
         <div class="w-px m-1 bg-gray-400 opacity-30"></div>
         <button
-          class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
+          class="flex items-center gap-2 px-2 sm:px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
                      hover:bg-gray-200"
           routerLink="/signup"
         >
-          <span>Sign Up</span>
+          <span class="text-sm sm:text-base">Sign Up</span>
         </button>
       }
     </div>

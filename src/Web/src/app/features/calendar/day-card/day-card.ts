@@ -10,13 +10,13 @@ import { IUserEvent } from '../../event/models/user-event';
   template: `
     @if (viewMode === calendarViewMode.Month) {
       <div
-        class="p-1 flex flex-col aspect-3/2 max-h-34 w-full"
+        class="p-1 flex flex-col aspect-1/2 lg:aspect-3/2 max-h-34 w-full"
         [class.bg-gray-100]="!isDisplayedMonth"
         [class.text-gray-400]="!isDisplayedMonth"
         [class.text-indigo-600]="isPresentDay"
         [class.bg-indigo-50]="isPresentDay"
       >
-        <span class="font-medium px-2">{{ date | date: 'd' }}</span>
+        <span class="text-xs md:text-base md:font-medium px-2">{{ date | date: 'd' }}</span>
         <div class="mt-1 relative">
           <app-day-events-list [events]="events" class="absolute w-full" />
         </div>

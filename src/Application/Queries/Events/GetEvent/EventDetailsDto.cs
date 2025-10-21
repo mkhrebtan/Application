@@ -9,4 +9,5 @@ public record EventDetailsDto(
     int? Capacity,
     int ParticipantsCount,
     bool IsUserParticipating,
-    bool IsUserOrganizer);
+    bool IsUserOrganizer,
+    bool IsPublic);

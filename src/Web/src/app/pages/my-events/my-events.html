@@ -3,8 +3,13 @@
 
   @let events = events$ | async;
   @if (events) {
-
-    <app-calendar-view [events]="events"/>
+    @if (events.length === 0) {
+      <div class="text-center text-gray-500">
+        You are not part of any events yet. Explore public events and join or create your own event.
+      </div>
+    } @else {
+      <app-calendar-view [events]="events"/>
+    }
   } @else {
     <div class="flex justify-center items-center">
       <fa-icon [icon]="faSpinner" class="text-4xl text-gray-400 animate-spin"/>

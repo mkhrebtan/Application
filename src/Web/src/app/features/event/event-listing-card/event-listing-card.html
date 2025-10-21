@@ -1,6 +1,7 @@
 ﻿<div
   (click)="navigateToDetails()"
-  class="border p-4 rounded-lg flex flex-col gap-5 border-gray-300 shadow-md group cursor-pointer hover:scale-[1.02] transition-all duration-300"
+  class="border p-4 rounded-lg flex flex-col gap-5 border-gray-300 shadow-md group cursor-pointer hover:scale-[1.02]
+          transition-all duration-300 text-sm lg:text-base"
 >
   <div class="flex flex-col gap-2">
     <h3 class="text-xl font-semibold line-clamp-1">
@@ -48,10 +49,10 @@
       </button>
     } @else if (eventState() == EventState.Joined) {
       <button
-        (click)="$event.stopPropagation()"
+        (click)="leaveEvent($event)"
         class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-red-600 hover:bg-red-500"
       >
-        Joined
+        Leave Event
       </button>
     } @else if (eventState() == EventState.Full) {
       <button
@@ -69,3 +70,7 @@
     }
   </div>
 </div>
+
+@if (joinEventDialogIsOpen()) {
+  <app-join-event-dialog (closeDialog)="closeJoinEventDialog()" (joinEventSubmit)="onJoinEventFormSubmit($event)"/>
+}
