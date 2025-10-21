@@ -5,6 +5,7 @@ import { IEvent } from '../../features/event/models/event';
 import { AuthService } from '../auth/auth-service/auth-service';
 import { IPagedList } from '../../shared/models/paged-list';
 import { map } from 'rxjs';
+import { IUserEvent } from '../../features/event/models/user-event';
 
 @Injectable({
   providedIn: 'root',
@@ -55,29 +56,9 @@ export class EventService {
     return event;
   }
 
-  getEvents() {
-    const sampleEvents: IEvent[] = [
-      {
-        id: 1,
-        title: 'Sample Event 1',
-        description: 'This is a sample event description 1.',
-        date: new Date(),
-        location: 'Sample Location 1',
-        capacity: 100,
-        participants: 50,
-        visibility: 'public',
-      },
-      {
-        id: 2,
-        title: 'Sample Event 2',
-        description: 'This is a sample event description 2.',
-        date: new Date(),
-        location: 'Sample Location 2',
-        capacity: 200,
-        participants: 150,
-        visibility: 'private',
-      },
-    ];
-    return sampleEvents;
+  getUserEvents() {
+    return this.http
+      .get<{ events: IUserEvent[] }>(`${this.eventsUrl}/me`)
+      .pipe(map((response) => response.events));
   }
 }

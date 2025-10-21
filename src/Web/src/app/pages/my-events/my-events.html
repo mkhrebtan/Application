@@ -1,5 +1,13 @@
 ﻿<div class="pt-8 pb-8 flex flex-col gap-10">
-  <app-hero-section [title]="heroTitle" [description]="heroDescription" />
+  <app-hero-section [description]="heroDescription" [title]="heroTitle"/>
 
-  <app-calendar-view [events]="events" />
+  @let events = events$ | async;
+  @if (events) {
+
+    <app-calendar-view [events]="events"/>
+  } @else {
+    <div class="flex justify-center items-center">
+      <fa-icon [icon]="faSpinner" class="text-4xl text-gray-400 animate-spin"/>
+    </div>
+  }
 </div>
