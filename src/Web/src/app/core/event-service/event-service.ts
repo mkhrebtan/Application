@@ -68,29 +68,34 @@ export class EventService {
     capacity?: number;
     isPublic: boolean;
   }) {
-    return this.http.post<{ eventId: UUID }>(this.eventsUrl, eventData).pipe(
-      map((response) => response.eventId)
-    );
+    return this.http
+      .post<{ eventId: UUID }>(this.eventsUrl, eventData)
+      .pipe(map((response) => response.eventId));
   }
 
-  updateEvent(eventData: {
-    eventId: UUID;
-    title: string | null;
-    description: string | null;
-    date: string | null;
-    location: string | null;
-    capacity: {
-      isSpecified: boolean;
-      value?: number;
-    }
-    isPublic: boolean;
-  })
-  {
-
+  updateEvent(
+    eventId: UUID,
+    eventData: {
+      title: string | null;
+      description: string | null;
+      date: string | null;
+      location: string | null;
+      capacity: {
+        isSpecified: boolean;
+        value: number | null;
+      };
+      isPublic: boolean | null;
+    },
+  ) {
+    return this.http.put(`${this.eventsUrl}/${eventId}`, eventData);
   }
 
-  joinEvent(eventId: UUID) {
-    return this.http.post(`${this.eventsUrl}/${eventId}/join`, {});
+  joinEvent(eventId: UUID, firstName?: string, lastName?: string, email?: string) {
+    return this.http.post(`${this.eventsUrl}/${eventId}/join`, {
+      visitorFirstName: firstName,
+      visitorLastName: lastName,
+      visitorEmail: email,
+    });
   }
 
   leaveEvent(eventId: UUID) {

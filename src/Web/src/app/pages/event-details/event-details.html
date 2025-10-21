@@ -1,56 +1,76 @@
 ﻿<div class="pt-8 pb-8 flex flex-col gap-10 lg:grid lg:grid-cols-2 lg:gap-5">
   <div class="flex flex-col gap-10">
-    <app-hero-section [title]="event.title" [description]="event.description" />
-    <div class="text-gray-600 flex flex-col gap-2">
-      <div class="flex items-center gap-2">
-        <fa-icon class="text-sm" [icon]="faClock" />
-        <p>{{ event.date | date: 'mediumDate' }} | {{ event.date | date: 'shortTime' }}</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <fa-icon class="text-sm" [icon]="faLocationDot" />
-        <p>{{ event.location }}</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <fa-icon class="text-sm" [icon]="faUsers" />
-        <div class="flex gap-1 items-center">
-          <p>{{ event.participants }}</p>
-          <span>/</span>
-          @if (event.capacity) {
-            <p>{{ event.capacity }}</p>
-          } @else {
-            <fa-icon class="text-sm" [icon]="faInfinity" />
-          }
+    @let event = event$ | async;
+    @if (event) {
+      <app-hero-section [description]="event.description" [title]="event.title"/>
+      <div class="text-gray-600 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faClock" class="text-sm"/>
+          <p>{{ event.date | date: 'mediumDate' }} | {{ event.date | date: 'shortTime' }}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faLocationDot" class="text-sm"/>
+          <p>{{ event.location }}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faUsers" class="text-sm"/>
+          <div class="flex gap-1 items-center">
+            <p>{{ event.participantsCount }}</p>
+            <span>/</span>
+            @if (event.capacity) {
+              <p>{{ event.capacity }}</p>
+            } @else {
+              <fa-icon [icon]="faInfinity" class="text-sm"/>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    } @else {
+      <div class="col-span-4 flex justify-center items-center">
+        <fa-icon [icon]="faSpinner" class="animate-spin text-gray-400 text-3xl"/>
+      </div>
+    }
 
     <div class="flex flex-col gap-4">
-      <button
-        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2"
-        [class.cursor-pointer]="eventState() != EventState.Full"
-        [class.bg-green-600]="eventState() == EventState.CanJoin"
-        [class.hover:bg-green-500]="eventState() == EventState.CanJoin"
-        [class.cursor-not-allowed]="eventState() != EventState.CanJoin"
-        [class.bg-gray-400]="eventState() == EventState.Full"
-        [class.bg-red-600]="eventState() == EventState.Joined"
-        [class.hover:bg-red-500]="eventState() == EventState.Joined"
-      >
-        @if (eventState() == EventState.Full) {
-          Full
-        } @else if (eventState() == EventState.Joined) {
-          Joined
-        } @else {
+      @if (eventState() == EventState.CanJoin) {
+        <button
+          (click)="joinEvent()"
+          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+                 bg-green-600 hover:bg-green-500 cursor-pointer"
+        >
           Join Event
-        }
-      </button>
+        </button>
+      }
+
+      @if (eventState() == EventState.Joined) {
+        <button
+          (click)="leaveEvent()"
+          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+                 bg-red-600 hover:bg-red-500 cursor-pointer"
+        >
+          Leave Event
+        </button>
+      }
+
+      @if (eventState() == EventState.Full) {
+        <button
+          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+                 bg-gray-400 cursor-not-allowed"
+          disabled
+        >
+          Event Full
+        </button>
+      }
+
       <button
+        (click)="openEditDialog()"
         class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
               bg-indigo-600 hover:bg-indigo-500 cursor-pointer"
-        (click)="openEditDialog()"
       >
         Edit
       </button>
       <button
+        (click)="deleteEvent()"
         class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
                 bg-red-600 hover:bg-red-500 cursor-pointer"
       >
@@ -62,7 +82,7 @@
   <div class="flex flex-col items-center gap-6">
     <h2 class="text-2xl font-semibold">Participants</h2>
     <div
-      class="bg-gray-200 w-full md:w-2/3 flex flex-col gap-2 p-4 rounded-xl lg:max-h-[70vh] lg:overflow-y-auto border border-gray-300
+      class="bg-gray-200 w-full md:w-2/3 flex flex-col gap-2 p-4 rounded-xl lg:max-h-[70vh] lg:min-h-[70vh] lg:overflow-y-auto border border-gray-300
           [&::-webkit-scrollbar]:w-2
           [&::-webkit-scrollbar-track]:rounded-full
           [&::-webkit-scrollbar-track]:bg-transparent
@@ -71,13 +91,25 @@
           [&::-webkit-scrollbar-thumb]:rounded-sm
           [&::-webkit-scrollbar-thumb]:bg-gray-700"
     >
-      @for (participant of participants; track participant) {
-        <div class="text-left bg-gray-100 p-2 px-4 rounded-lg">{{ participant }}</div>
+      @let participants = participants$ | async;
+      @if (participants) {
+        @for (participant of participants; track participant) {
+          <div class="text-left bg-gray-100 p-2 px-4 rounded-lg">{{ `${participant.fistName} ${participant.lastName}` }}
+          </div>
+        }
+      } @else {
+        <div class="col-span-4 flex justify-center items-center">
+          <fa-icon [icon]="faSpinner" class="animate-spin text-gray-400 text-3xl"/>
+        </div>
       }
     </div>
   </div>
 </div>
 
 @if (editDialogIsOpen()) {
-  <app-edit-event-dialog [event]="event" (closeDialog)="closeEditDialog()" />
+  <app-edit-event-dialog (closeDialog)="closeEditDialog()" (submitEvent)="editEventSubmit($event)" [event]="event!"/>
+}
+
+@if (joinEventDialogIsOpen()) {
+  <app-join-event-dialog (closeDialog)="closeJoinEventDialog()" (joinEventSubmit)="onJoinEventSubmit($event)"/>
 }
