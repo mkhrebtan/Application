@@ -1,0 +1,71 @@
+﻿<div
+  (click)="navigateToDetails()"
+  class="border p-4 rounded-lg flex flex-col gap-5 border-gray-300 shadow-md group cursor-pointer hover:scale-[1.02] transition-all duration-300"
+>
+  <div class="flex flex-col gap-2">
+    <h3 class="text-xl font-semibold line-clamp-1">
+      {{ event.title }}
+    </h3>
+    <p class="leading-normal h-12 line-clamp-2 text-gray-600">{{ event.description }}</p>
+  </div>
+  <div
+    [class.flex-col]="viewMode === EventListingView.Grid"
+    [class.gap-5]="viewMode === EventListingView.Grid"
+    class="flex flex-col "
+  >
+    <div
+      [class.flex]="viewMode === EventListingView.List"
+      [class.gap-6]="viewMode === EventListingView.List"
+      class="text-gray-600 flex-1"
+    >
+      <div class="flex items-center gap-2">
+        <fa-icon [icon]="faClock" class="text-sm"/>
+        <p>{{ event.date | date: 'mediumDate' }} | {{ event.date | date: 'shortTime' }}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <fa-icon [icon]="faLocationDot" class="text-sm"/>
+        <p>{{ event.location }}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <fa-icon [icon]="faUsers" class="text-sm"/>
+        <div class="flex gap-1 items-center">
+          <p>{{ event.participantsCount }}</p>
+          <span>/</span>
+          @if (event.capacity) {
+            <p>{{ event.capacity }}</p>
+          } @else {
+            <fa-icon [icon]="faInfinity" class="text-sm"/>
+          }
+        </div>
+      </div>
+    </div>
+    @if (eventState() == EventState.Organizer) {
+      <button
+        (click)="$event.stopPropagation()"
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-indigo-600 hover:bg-indigo-500"
+      >
+        Manage Event
+      </button>
+    } @else if (eventState() == EventState.Joined) {
+      <button
+        (click)="$event.stopPropagation()"
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-red-600 hover:bg-red-500"
+      >
+        Joined
+      </button>
+    } @else if (eventState() == EventState.Full) {
+      <button
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-not-allowed bg-gray-400"
+      >
+        Full
+      </button>
+    } @else {
+      <button
+        (click)="joinEvent($event)"
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-green-600 hover:bg-green-500"
+      >
+        Join Event
+      </button>
+    }
+  </div>
+</div>

@@ -1,0 +1,62 @@
+﻿<div class="p-5 lg:grid lg:grid-cols-3 items-center sticky top-0 shadow-sm z-10 backdrop-blur-xs bg-white/70">
+  <nav class="col-start-2 flex justify-center">
+    <div
+      class="border-1 border-gray-300 rounded-4xl bg-white p-1 flex shadow-sm"
+    >
+      <button
+        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+                    hover:-translate-y-px hover:text-black"
+        routerLink="/events"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
+      >
+        <fa-icon [icon]="faListUl" />
+        <span>Events</span>
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+                    hover:-translate-y-px hover:text-black"
+        routerLink="/my-events"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
+      >
+        <fa-icon [icon]="faCalendar" />
+        <span>My Events</span>
+      </button>
+
+      <button
+        class="flex items-center gap-2 px-3 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl text-gray-500 transition-all duration-300
+                    hover:-translate-y-px hover:text-black"
+        routerLink="/create-event"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="hover:translate-none bg-gray-200 text-gray-950"
+      >
+        <fa-icon [icon]="faPlus" />
+        <span>Create Event</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="col-start-3 flex justify-center">
+    <div
+      class="flex justify-center h-full bg-white border border-gray-300 rounded-4xl backdrop-blur-md p-1 shadow-sm"
+    >
+      <button
+        class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
+                    hover:bg-gray-200"
+        routerLink="/login"
+      >
+        <span>Log In</span>
+      </button>
+      <div class="w-px m-1 bg-gray-400 opacity-30"></div>
+      <button
+        class="flex items-center gap-2 px-4 pb-1 pt-1 cursor-pointer whitespace-nowrap rounded-4xl transition-all duration-300
+                     hover:bg-gray-200"
+        routerLink="/signup"
+      >
+        <span>Sign Up</span>
+      </button>
+    </div>
+  </div>
+</div>
