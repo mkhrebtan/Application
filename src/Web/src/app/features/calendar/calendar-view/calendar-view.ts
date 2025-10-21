@@ -1,12 +1,12 @@
 import { Component, computed, Input, signal } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { IEvent } from '../../event/models/event';
 import { CalendarViewMode } from '../models/calendar-view-mode';
 import { DayCard } from '../day-card/day-card';
 import { ToggleOption } from '../../../shared/models/toggle-option';
 import { ViewToggle } from '../../../shared/components/view-toggle/view-toggle';
 import { CalendarDay } from '../models/calendar-day';
+import { IUserEvent } from '../../event/models/user-event';
 
 @Component({
   selector: 'app-calendar-view',
@@ -15,13 +15,6 @@ import { CalendarDay } from '../models/calendar-day';
   styles: ``,
 })
 export class CalendarView {
-  private _events: IEvent[] = [];
-  private _eventsByDay = new Map<string, IEvent[]>();
-  @Input()
-  set events(value: IEvent[]) {
-    this._events = value || [];
-    this.buildEventsMap();
-  }
   protected readonly calendarViewMode = CalendarViewMode;
   protected viewMode = signal(CalendarViewMode.Month);
   protected readonly calendarViewOptions: ToggleOption<CalendarViewMode>[] = [
@@ -61,7 +54,6 @@ export class CalendarView {
     const allDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
     return Array.from({ length: allDays.length / 7 }, (_, i) => allDays.slice(i * 7, i * 7 + 7));
   });
-
   protected currentWeek = computed((): CalendarDay[] => {
     const current = this.currentDate();
     const startOfWeek = new Date(current);
@@ -76,9 +68,36 @@ export class CalendarView {
       };
     });
   });
+  protected displayedDateRange = computed(() => {
+    if (this.viewMode() === CalendarViewMode.Week) {
+      const current = this.currentDate();
+      const startOfWeek = new Date(current);
+      startOfWeek.setDate(current.getDate() - current.getDay());
 
-  get events(): IEvent[] {
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+      const format = (date: Date) =>
+        date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return `${format(startOfWeek)} - ${format(endOfWeek)}`;
+    }
+
+    const format = (date: Date) =>
+      date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return format(this.currentDate());
+  });
+  private _eventsByDay = new Map<string, IUserEvent[]>();
+
+  private _events: IUserEvent[] = [];
+
+  get events(): IUserEvent[] {
     return this._events;
+  }
+
+  @Input()
+  set events(value: IUserEvent[]) {
+    this._events = value || [];
+    this.buildEventsMap();
   }
 
   decrementDate() {
@@ -99,26 +118,7 @@ export class CalendarView {
     );
   }
 
-  protected displayedDateRange = computed(() => {
-    if (this.viewMode() === CalendarViewMode.Week) {
-      const current = this.currentDate();
-      const startOfWeek = new Date(current);
-      startOfWeek.setDate(current.getDate() - current.getDay());
-
-      const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-      const format = (date: Date) =>
-        date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      return `${format(startOfWeek)} - ${format(endOfWeek)}`;
-    }
-
-    const format = (date: Date) =>
-      date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    return format(this.currentDate());
-  });
-
-  getEventsForDay(date: Date): IEvent[] {
+  getEventsForDay(date: Date): IUserEvent[] {
     const key = date.toDateString();
     return this._eventsByDay.get(key) || [];
   }
