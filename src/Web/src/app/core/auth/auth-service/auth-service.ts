@@ -1,4 +1,4 @@
-import { inject, Injectable, OnInit } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -8,7 +8,7 @@ import { SsrCookieService } from 'ngx-cookie-service-ssr';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService implements OnInit {
+export class AuthService {
   private authUrl = '/api/auth';
 
   private http = inject(HttpClient);
@@ -18,7 +18,7 @@ export class AuthService implements OnInit {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  ngOnInit() {
+  constructor() {
     const visitorId = this.cookieService.get('visitorId');
     if (!visitorId) {
       const newVisitorId = crypto.randomUUID();

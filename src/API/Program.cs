@@ -15,6 +15,7 @@ using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
 using Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,16 @@ builder.Services.AddSwaggerGenWithAuth();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhostFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:8080")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -52,22 +63,28 @@ app.UseAuthorization();
 
 app.UseExceptionHandler();
 
+app.UseCors("AllowLocalhostFrontend");
+
 // Auth Endpoints
 app.MapPost("/auth/login", async (
+        [FromHeader(Name = "X-Visitor-Id")] Guid visitorId,
         LoginUserCommand request,
         ICommandHandler<LoginUserCommand, LoginUserCommandResponse> handler,
         CancellationToken cancellationToken) =>
     {
+        request = request with { VisitorId = visitorId, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
     .WithTags("Auth");
 
 app.MapPost("/auth/signup", async (
+        [FromHeader(Name = "X-Visitor-Id")] Guid visitorId,
         SignupUserCommand request,
         ICommandHandler<SignupUserCommand, SignupUserCommandResponse> handler,
         CancellationToken cancellationToken) =>
     {
+        request = request with { VisitorId = visitorId, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
@@ -144,7 +161,7 @@ app.MapPost("/events/{id:guid}/leave", async (
     .WithTags("Events");
 
 app.MapGet("/events", async (
-        Guid? visitorId,
+        [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
         string? searchTerm,
         bool? today,
         bool? weekend,
@@ -161,7 +178,7 @@ app.MapGet("/events", async (
 
 app.MapGet("/events/{id:guid}", async (
         Guid id,
-        Guid? visitorId,
+        [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
         IQueryHandler<GetEventQuery, GetEventQueryResponse> handler,
         CancellationToken cancellationToken) =>
     {
