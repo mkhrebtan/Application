@@ -39,11 +39,12 @@
         </div>
       </div>
     </div>
-    @if (eventState() == EventState.Full) {
+    @if (eventState() == EventState.Organizer) {
       <button
-        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-not-allowed bg-gray-400"
+        (click)="$event.stopPropagation()"
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-indigo-600 hover:bg-indigo-500"
       >
-        Full
+        Manage Event
       </button>
     } @else if (eventState() == EventState.Joined) {
       <button
@@ -51,6 +52,12 @@
         class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-red-600 hover:bg-red-500"
       >
         Joined
+      </button>
+    } @else if (eventState() == EventState.Full) {
+      <button
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-not-allowed bg-gray-400"
+      >
+        Full
       </button>
     } @else {
       <button

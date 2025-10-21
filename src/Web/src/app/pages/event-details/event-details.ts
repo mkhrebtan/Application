@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faInfinity, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { EventState } from '../../features/event/event-listing-card/event-listing-card';
+import { EventState } from '../../features/event/models/event-state';
 import { EditEventDialog } from '../../features/event/edit-event-dialog/edit-event-dialog';
 
 @Component({

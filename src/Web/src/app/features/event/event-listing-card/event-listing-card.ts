@@ -6,6 +6,7 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { EventListingView } from '../models/event-listing-view';
 import { Router } from '@angular/router';
 import { IEventListingModel } from '../models/event-listing-model';
+import { EventState } from '../models/event-state';
 
 @Component({
   selector: 'app-event-listing-card',
@@ -26,11 +27,13 @@ export class EventListingCard implements OnInit {
   protected eventState = signal(EventState.CanJoin);
   private router = inject(Router);
 
-  ngOnInit() {
-    if (this.event.capacity && this.event.participantsCount >= this.event.capacity) {
+  ngOnInit () {
+    if (this.event.requesterStatus.isOrganizer) {
+      this.eventState.set(EventState.Organizer);
+    } else if (this.event.requesterStatus.isParticipating) {
+      this.eventState.set(EventState.Joined);
+    } else if (this.event.capacity && this.event.participantsCount >= this.event.capacity) {
       this.eventState.set(EventState.Full);
-    } else {
-      this.eventState.set(EventState.CanJoin);
     }
   }
 
@@ -42,10 +45,4 @@ export class EventListingCard implements OnInit {
     event.stopPropagation();
     this.joinClick.emit(this.event);
   }
-}
-
-export enum EventState {
-  CanJoin,
-  Joined,
-  Full,
 }
