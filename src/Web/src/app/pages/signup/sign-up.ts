@@ -1,33 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-  ValidatorFn,
-  ValidationErrors,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { faSpinner, faCircleXmark, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faCircleXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { FormInput } from '../../shared/components/form-input/form-input';
 import { ConfirmPasswordInput } from '../../features/auth/confirm-password-input/confirm-password-input';
-
-// Custom validator for password confirmation
-export const passwordMatchValidator: ValidatorFn = (
-  control: AbstractControl,
-): ValidationErrors | null => {
-  const password = control.get('password');
-  const confirmPassword = control.get('confirmPassword');
-
-  if (password && confirmPassword && password.value && confirmPassword.value) {
-    if (password.value !== confirmPassword.value) {
-      return { passwordMismatch: true };
-    }
-  }
-  return null;
-};
+import { passwordMatchValidator } from '../../features/auth/password-match-validator';
+import { AuthService } from '../../core/auth/auth-service/auth-service';
 
 @Component({
   selector: 'app-register',
@@ -47,13 +27,11 @@ export class SignUp {
   protected readonly faCircleXmark = faCircleXmark;
   protected readonly faCircleCheck = faCircleCheck;
 
-  private readonly formBuilder = inject(FormBuilder);
-  private readonly router = inject(Router);
-
   protected isLoading = signal(false);
   protected errorMessage = signal('');
   protected successMessage = signal('');
 
+  private readonly formBuilder = inject(FormBuilder);
   protected readonly signupForm = this.formBuilder.group(
     {
       firstName: ['', [Validators.required]],
@@ -65,8 +43,10 @@ export class SignUp {
     { validators: passwordMatchValidator },
   );
 
+  private readonly router = inject(Router);
+  private authService = inject(AuthService);
+
   constructor() {
-    // Listen for password changes and revalidate form
     this.signupForm.get('password')?.valueChanges.subscribe(() => {
       const confirmPasswordControl = this.signupForm.get('confirmPassword');
       if (confirmPasswordControl?.value) {
@@ -74,7 +54,6 @@ export class SignUp {
       }
     });
 
-    // Listen for confirm password changes and revalidate form
     this.signupForm.get('confirmPassword')?.valueChanges.subscribe(() => {
       this.signupForm.updateValueAndValidity();
     });
@@ -103,32 +82,28 @@ export class SignUp {
       this.errorMessage.set('');
       this.successMessage.set('');
 
-      const formData = this.signupForm.value;
-      console.log('Registration attempt:', formData);
-
-      // Simulate API call
-      setTimeout(() => {
-        this.isLoading.set(false);
-        // For demo purposes, simulate successful registration
-        // In real app, this would be an actual API call
-        if (formData.email && !formData.email.includes('taken')) {
-          this.successMessage.set('Account created successfully! Redirecting to login...');
-          console.log('Registration successful');
-
-          // Redirect to login after success
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        } else {
-          this.errorMessage.set('Email address is already taken. Please try a different email.');
-        }
-      }, 1500);
+      const credentials = this.signupForm.value;
+      this.authService
+        .signup(
+          credentials.firstName!,
+          credentials.lastName!,
+          credentials.email!,
+          credentials.password!,
+        )
+        .subscribe({
+          next: () => {
+            this.successMessage.set('Account created successfully! Logging in...');
+            setTimeout(() => {
+              this.router.navigate(['/events']);
+            }, 2000);
+          },
+          error: (err) => {
+            this.errorMessage.set(err.error.detail || 'Signup failed. Please try again.');
+            this.isLoading.set(false);
+          },
+        });
     } else {
-      console.log('Form is invalid');
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.signupForm.controls).forEach((key) => {
-        this.signupForm.get(key)?.markAsTouched();
-      });
+      this.signupForm.markAllAsTouched();
     }
   }
 }

@@ -15,9 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     });
 
     return next(cloned);
-  }
-
-  if (visitorId) {
+  } else if (visitorId) {
     const cloned = req.clone({
       setHeaders: {
         'X-Visitor-Id': visitorId,

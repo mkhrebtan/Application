@@ -2,17 +2,15 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
 import { SsrCookieService } from 'ngx-cookie-service-ssr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private authUrl = '/api/auth';
+  private authUrl = 'https://localhost:5001/auth';
 
   private http = inject(HttpClient);
-  private router = inject(Router);
   private cookieService = inject(SsrCookieService);
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
@@ -26,13 +24,32 @@ export class AuthService {
     }
   }
 
-  login(username: string, password: string) {
-    const visitorId = this.cookieService.get('visitorId');
+  login(email: string, password: string) {
     return this.http
       .post<{ accessToken: string; refreshToken: string }>(`${this.authUrl}/login`, {
-        username,
+        email,
         password,
-        visitorId,
+      })
+      .pipe(
+        tap((response) => {
+          this.cookieService.set('accessToken', response.accessToken);
+          this.cookieService.set('refreshToken', response.accessToken);
+          this.isAuthenticatedSubject.next(true);
+        }),
+        catchError((err) => {
+          this.isAuthenticatedSubject.next(false);
+          throw err;
+        }),
+      );
+  }
+
+  signup(firstName: string, lastName: string, email: string, password: string) {
+    return this.http
+      .post<{ accessToken: string; refreshToken: string }>(`${this.authUrl}/signup`, {
+        firstName,
+        lastName,
+        email,
+        password,
       })
       .pipe(
         tap((response) => {
@@ -51,7 +68,6 @@ export class AuthService {
     this.cookieService.delete('accessToken');
     this.cookieService.delete('refreshToken');
     this.isAuthenticatedSubject.next(false);
-    this.router.navigate(['/events']);
   }
 
   getToken(): string {
@@ -67,6 +83,6 @@ export class AuthService {
   }
 
   private hasToken(): boolean {
-    return this.cookieService.get('accessToken') !== null;
+    return !!this.cookieService.get('accessToken');
   }
 }
