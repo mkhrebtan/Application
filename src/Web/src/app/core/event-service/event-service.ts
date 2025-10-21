@@ -1,10 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IEventListingModel } from '../../features/event/models/event-listing-model';
-import { IEvent } from '../../features/event/models/event';
 import { AuthService } from '../auth/auth-service/auth-service';
 import { IPagedList } from '../../shared/models/paged-list';
 import { map } from 'rxjs';
+import { UUID } from 'node:crypto';
+import { IEventDetails } from '../../features/event/models/event-details';
+import { IEventParticipant } from '../../features/event/models/event-participant';
+import { IUserEvent } from '../../features/event/models/user-event';
 
 @Injectable({
   providedIn: 'root',
@@ -41,43 +44,60 @@ export class EventService {
       .pipe(map((response) => response.events));
   }
 
-  getEventById(id: number) {
-    const event: IEvent = {
-      id: id,
-      title: 'Sample Event',
-      description: 'This is a sample event description.',
-      date: new Date(),
-      location: 'Sample Location',
-      capacity: 100,
-      participants: 50,
-      visibility: 'public',
-    };
-    return event;
+  getEventById(eventId: UUID) {
+    return this.http.get<IEventDetails>(`${this.eventsUrl}/${eventId}`);
   }
 
-  getEvents() {
-    const sampleEvents: IEvent[] = [
-      {
-        id: 1,
-        title: 'Sample Event 1',
-        description: 'This is a sample event description 1.',
-        date: new Date(),
-        location: 'Sample Location 1',
-        capacity: 100,
-        participants: 50,
-        visibility: 'public',
-      },
-      {
-        id: 2,
-        title: 'Sample Event 2',
-        description: 'This is a sample event description 2.',
-        date: new Date(),
-        location: 'Sample Location 2',
-        capacity: 200,
-        participants: 150,
-        visibility: 'private',
-      },
-    ];
-    return sampleEvents;
+  getEventParticipants(eventId: UUID) {
+    return this.http
+      .get<{ participants: IEventParticipant[] }>(`${this.eventsUrl}/${eventId}/participants`)
+      .pipe(map((response) => response.participants));
+  }
+
+  getUserEvents() {
+    return this.http
+      .get<{ events: IUserEvent[] }>(`${this.eventsUrl}/me`)
+      .pipe(map((response) => response.events));
+  }
+
+  createEvent(eventData: {
+    title: string;
+    description: string;
+    date: string;
+    location: string;
+    capacity?: number;
+    isPublic: boolean;
+  }) {
+    return this.http.post<{ eventId: UUID }>(this.eventsUrl, eventData).pipe(
+      map((response) => response.eventId)
+    );
+  }
+
+  updateEvent(eventData: {
+    eventId: UUID;
+    title: string | null;
+    description: string | null;
+    date: string | null;
+    location: string | null;
+    capacity: {
+      isSpecified: boolean;
+      value?: number;
+    }
+    isPublic: boolean;
+  })
+  {
+
+  }
+
+  joinEvent(eventId: UUID) {
+    return this.http.post(`${this.eventsUrl}/${eventId}/join`, {});
+  }
+
+  leaveEvent(eventId: UUID) {
+    return this.http.post(`${this.eventsUrl}/${eventId}/leave`, {});
+  }
+
+  deleteEvent(eventId: UUID) {
+    return this.http.delete(`${this.eventsUrl}/${eventId}`);
   }
 }
