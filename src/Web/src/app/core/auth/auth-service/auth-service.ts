@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token-service/token.service';
+import { UUID } from 'node:crypto';
 
 export interface User {
-  id: string;
+  id: UUID;
   firstName: string;
   lastName: string;
   email: string;
