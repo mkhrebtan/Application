@@ -14,6 +14,7 @@ using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
+using Application.Queries.Users.GetUser;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
@@ -208,5 +209,16 @@ app.MapGet("/events/{id:guid}/participants", async (
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
     .WithTags("Events");
+
+app.MapGet("/users/me", async (
+        IQueryHandler<GetUserQuery, GetUserQueryResponse> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new GetUserQuery();
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Users")
+    .RequireAuthorization();
 
 await app.RunAsync();

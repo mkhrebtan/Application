@@ -66,7 +66,6 @@ export class Events {
   private readonly eventService = inject(EventService);
 
   constructor() {
-    // Combine search term changes and filter changes
     const searchTerm$ = this.searchControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),

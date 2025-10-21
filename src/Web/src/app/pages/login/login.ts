@@ -22,7 +22,6 @@ export class Login {
   protected readonly loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    rememberMe: [false],
   });
   private readonly router = inject(Router);
   private authService = inject(AuthService);

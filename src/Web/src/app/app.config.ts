@@ -4,12 +4,12 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { SsrCookieService } from 'ngx-cookie-service-ssr';
 
 import { routes } from './app.routes';
+import { authInterceptor } from './core/auth/interceptors/auth-interceptor';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './core/auth/auth-interceptor/auth-interceptor';
-import { SsrCookieService } from 'ngx-cookie-service-ssr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
