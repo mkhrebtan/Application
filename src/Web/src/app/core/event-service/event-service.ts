@@ -2,6 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IEventListingModel } from '../../features/event/models/event-listing-model';
 import { IEvent } from '../../features/event/models/event';
+import { AuthService } from '../auth/auth-service/auth-service';
+import { IPagedList } from '../../shared/models/paged-list';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,17 +13,18 @@ export class EventService {
   private eventsUrl = 'https://localhost:5001/events';
 
   private http = inject(HttpClient);
+  private authService = inject(AuthService);
 
   getEventsList(params: {
-    stringSearch?: string;
-    today?: boolean;
-    weekend?: boolean;
+    searchTerm: string | null;
+    today: boolean | null;
+    weekend: boolean | null;
     page: number;
     pageSize: number;
   }) {
     let queryParams = new HttpParams();
-    if (params.stringSearch) {
-      queryParams = queryParams.append('stringSearch', params.stringSearch);
+    if (params.searchTerm) {
+      queryParams = queryParams.append('searchTerm', params.searchTerm);
     }
 
     if (params.today) {
@@ -32,7 +36,9 @@ export class EventService {
     queryParams = queryParams.append('pageNumber', params.page.toString());
     queryParams = queryParams.append('pageSize', params.pageSize.toString());
 
-    return this.http.get<IEventListingModel[]>(this.eventsUrl, { params: queryParams });
+    return this.http
+      .get<{ events: IPagedList<IEventListingModel> }>(this.eventsUrl, { params: queryParams })
+      .pipe(map((response) => response.events));
   }
 
   getEventById(id: number) {

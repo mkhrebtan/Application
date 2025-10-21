@@ -1,13 +1,15 @@
-﻿export interface IEventListingModel {
-  id: number;
+﻿export interface RequesterStatus {
+  isParticipating: boolean;
+  isOrganizer: boolean;
+}
+
+export interface IEventListingModel {
+  id: string;
   title: string;
   description: string;
-  date: Date;
+  date: string;
   location: string;
-  capacity?: number;
-  participants: number;
-  requesterStatus: {
-    isParticipating: boolean;
-    isOrganizer: boolean;
-  };
+  capacity: number | null;
+  participantsCount: number;
+  requesterStatus: RequesterStatus;
 }

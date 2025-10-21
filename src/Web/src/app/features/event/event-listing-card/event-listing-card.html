@@ -9,32 +9,32 @@
     <p class="leading-normal h-12 line-clamp-2 text-gray-600">{{ event.description }}</p>
   </div>
   <div
-    class="flex flex-col "
     [class.flex-col]="viewMode === EventListingView.Grid"
     [class.gap-5]="viewMode === EventListingView.Grid"
+    class="flex flex-col "
   >
     <div
-      class="text-gray-600 flex-1"
       [class.flex]="viewMode === EventListingView.List"
       [class.gap-6]="viewMode === EventListingView.List"
+      class="text-gray-600 flex-1"
     >
       <div class="flex items-center gap-2">
-        <fa-icon class="text-sm" [icon]="faClock" />
+        <fa-icon [icon]="faClock" class="text-sm"/>
         <p>{{ event.date | date: 'mediumDate' }} | {{ event.date | date: 'shortTime' }}</p>
       </div>
       <div class="flex items-center gap-2">
-        <fa-icon class="text-sm" [icon]="faLocationDot" />
+        <fa-icon [icon]="faLocationDot" class="text-sm"/>
         <p>{{ event.location }}</p>
       </div>
       <div class="flex items-center gap-2">
-        <fa-icon class="text-sm" [icon]="faUsers" />
+        <fa-icon [icon]="faUsers" class="text-sm"/>
         <div class="flex gap-1 items-center">
-          <p>{{ event.participants }}</p>
+          <p>{{ event.participantsCount }}</p>
           <span>/</span>
           @if (event.capacity) {
             <p>{{ event.capacity }}</p>
           } @else {
-            <fa-icon class="text-sm" [icon]="faInfinity" />
+            <fa-icon [icon]="faInfinity" class="text-sm"/>
           }
         </div>
       </div>
@@ -54,8 +54,8 @@
       </button>
     } @else {
       <button
-        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-green-600 hover:bg-green-500"
         (click)="joinEvent($event)"
+        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-green-600 hover:bg-green-500"
       >
         Join Event
       </button>

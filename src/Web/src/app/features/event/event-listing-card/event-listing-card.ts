@@ -27,7 +27,7 @@ export class EventListingCard implements OnInit {
   private router = inject(Router);
 
   ngOnInit() {
-    if (this.event.capacity && this.event.participants >= this.event.capacity) {
+    if (this.event.capacity && this.event.participantsCount >= this.event.capacity) {
       this.eventState.set(EventState.Full);
     } else {
       this.eventState.set(EventState.CanJoin);

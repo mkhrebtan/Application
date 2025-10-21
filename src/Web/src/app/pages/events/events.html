@@ -6,6 +6,7 @@
       <div class="relative flex items-center min-w-1/4">
         <fa-icon [icon]="faMagnifyingGlass" class="absolute left-4 text-gray-400"/>
         <input
+          [formControl]="searchControl"
           class="w-full pt-2 pb-2 pr-2 pl-12 placeholder:text-gray-400 border rounded-4xl border-gray-300 shadow-sm focus:outline-none focus:border-gray-400"
           id="eventSearch"
           placeholder="Search events..."
@@ -49,20 +50,25 @@
   </section>
   <section [class.flex-col]="viewMode() === EventListingView.List"
            [class.flex]="viewMode() === EventListingView.List"
-           [class.grid-cols-3]="viewMode() === EventListingView.Grid" [class.grid]="viewMode() === EventListingView.Grid"
+           [class.grid-cols-3]="viewMode() === EventListingView.Grid"
+           [class.grid]="viewMode() === EventListingView.Grid"
            [class.max-w-5xl]="viewMode() === EventListingView.List"
            [class.self-center]="viewMode() === EventListingView.List"
            [class]="{ 'min-w-2/3': viewMode() === EventListingView.List }"
            class="gap-6">
-    @let events = events$ | async;
-    @if (events) {
-      @for (event of events; track event.id) {
+    @let eventsPagedList = events$ | async;
+    @if (eventsPagedList) {
+      @for (event of eventsPagedList.items; track event.id) {
         <app-event-listing-card (joinClick)="onJoinEventClick($event)" [event]="event" [viewMode]="viewMode()"/>
       }
 
-      @if (events.length === 0) {
+      @if (eventsPagedList.totalCount === 0) {
         <p class="text-center col-span-4">No events found.</p>
       }
+    } @else {
+      <div class="col-span-4 flex justify-center items-center">
+        <fa-icon [icon]="faSpinner" class="animate-spin text-gray-400 text-3xl"/>
+      </div>
     }
   </section>
 </div>
