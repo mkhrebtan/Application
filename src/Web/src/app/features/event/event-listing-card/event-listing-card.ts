@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { IEventListingModel } from '../models/event-listing-model';
 import { EventState } from '../models/event-state';
 import { IJoinEventData, JoinEventDialog } from '../join-event-dialog/join-event-dialog';
-import { catchError, tap } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth-service/auth-service';
 import { EventService } from '../../../core/event-service/event-service';
 
@@ -41,6 +40,8 @@ export class EventListingCard implements OnInit {
       this.eventState.set(EventState.Joined);
     } else if (this.event.capacity && this.event.participantsCount >= this.event.capacity) {
       this.eventState.set(EventState.Full);
+    } else {
+      this.eventState.set(EventState.CanJoin);
     }
   }
 
@@ -51,15 +52,14 @@ export class EventListingCard implements OnInit {
   joinEvent(event: Event) {
     event.stopPropagation();
     if (this.authService.isAuthenticated()) {
-      this.eventService.joinEvent(this.event.id).pipe(
-        tap(() => {
+      this.eventService.joinEvent(this.event.id).subscribe({
+        next: () => {
           this.eventState.set(EventState.Joined);
-        }),
-        catchError((err) => {
+        },
+        error: (err) => {
           alert(err.error.detail || 'An error occurred while joining the event.');
-          throw err;
-        }),
-      );
+        },
+      });
     } else {
       this.openJoinEventDialog();
     }
@@ -76,28 +76,28 @@ export class EventListingCard implements OnInit {
   }
 
   onJoinEventSubmit(data: IJoinEventData) {
-    this.eventService.joinEvent(this.event.id, data.firstName, data.lastName, data.email).pipe(
-      tap(() => {
-        this.eventState.set(EventState.Joined);
-        this.closeJoinEventDialog();
-      }),
-      catchError((err) => {
-        alert(err.error.detail || 'An error occurred while joining the event.');
-        throw err;
-      }),
-    );
+    this.eventService
+      .joinEvent(this.event.id, data.firstName, data.lastName, data.email)
+      .subscribe({
+        next: () => {
+          this.eventState.set(EventState.Joined);
+          this.closeJoinEventDialog();
+        },
+        error: (err) => {
+          alert(err.error.detail || 'An error occurred while joining the event.');
+        },
+      });
   }
 
   leaveEvent(event: Event) {
     event.stopPropagation();
-    this.eventService.leaveEvent(this.event.id).pipe(
-      tap(() => {
+    this.eventService.leaveEvent(this.event.id).subscribe({
+      next: () => {
         this.eventState.set(EventState.CanJoin);
-      }),
-      catchError((err) => {
+      },
+      error: (err) => {
         alert(err.error.detail || 'An error occurred while leaving the event.');
-        throw err;
-      }),
-    );
+      },
+    });
   }
 }

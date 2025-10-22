@@ -1,5 +1,5 @@
 ﻿export interface IEventParticipant {
-  fistName: string;
+  firstName: string;
   lastName: string;
   joinedAt: Date;
 }

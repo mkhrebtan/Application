@@ -10,7 +10,7 @@ import { IUserEvent } from '../../event/models/user-event';
   template: `
     @if (viewMode === calendarViewMode.Month) {
       <div
-        class="p-1 flex flex-col aspect-3/2 max-h-34 w-full"
+        class="p-1 flex flex-col aspect-1/3 md:aspect-1/2 lg:aspect-3/2 max-h-34 w-full"
         [class.bg-gray-100]="!isDisplayedMonth"
         [class.text-gray-400]="!isDisplayedMonth"
         [class.text-indigo-600]="isPresentDay"

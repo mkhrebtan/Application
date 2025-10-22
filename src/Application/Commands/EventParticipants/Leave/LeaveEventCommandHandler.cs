@@ -28,7 +28,7 @@ internal sealed class LeaveEventCommandHandler : ICommandHandler<LeaveEventComma
     public async Task<Result> Handle(LeaveEventCommand request, CancellationToken cancellationToken = default)
     {
         var userId = _userContext.UserId;
-        if (userId is null && request.VisitorId is null)
+        if ((userId is null || userId == Guid.Empty) && request.VisitorId is null)
         {
             return Result.Failure(Error.Validation(
                 "JoinEvent.InvalidParticipant",
@@ -41,7 +41,7 @@ internal sealed class LeaveEventCommandHandler : ICommandHandler<LeaveEventComma
             return Result.Failure(Error.NotFound("Event.NotFound", $"Event with ID {request.EventId} was not found."));
         }
 
-        var eventParticipant = userId.HasValue
+        var eventParticipant = !(userId is null || userId == Guid.Empty)
             ? await _eventParticipantRepository.GetByUserIdAndEventIdAsync(
                 userId.Value,
                 request.EventId,

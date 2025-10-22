@@ -20,16 +20,22 @@ export class TokenService {
   }
 
   setTokens(accessToken: string, refreshToken: string): void {
-    this.cookieService.set('accessToken', accessToken);
-    this.cookieService.set('refreshToken', refreshToken);
+    const accessTokenExpiry = new Date();
+    accessTokenExpiry.setDate(accessTokenExpiry.getDate() + 7);
+    this.cookieService.set('accessToken', accessToken, { expires: accessTokenExpiry, path: '/' });
+
+    const refreshTokenExpiry = new Date();
+    refreshTokenExpiry.setDate(refreshTokenExpiry.getDate() + 30);
+    this.cookieService.set('refreshToken', refreshToken, {
+      expires: refreshTokenExpiry,
+      path: '/',
+    });
   }
 
   setVisitorId(visitorId: string): void {
-    this.cookieService.set('visitorId', visitorId, {
-      expires: 365,
-      sameSite: 'Strict',
-      secure: true,
-    });
+    const visitorIdExpiry = new Date();
+    visitorIdExpiry.setDate(visitorIdExpiry.getDate() + 365);
+    this.cookieService.set('visitorId', visitorId, { expires: visitorIdExpiry, path: '/' });
   }
 
   clearTokens(): void {
@@ -39,26 +45,5 @@ export class TokenService {
 
   hasAccessToken(): boolean {
     return !!this.getAccessToken();
-  }
-
-  hasRefreshToken(): boolean {
-    return !!this.getRefreshToken();
-  }
-
-  isTokenExpired(token: string): boolean {
-    if (!token) return true;
-
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentTime = Math.floor(Date.now() / 1000);
-      return payload.exp < currentTime;
-    } catch {
-      return true;
-    }
-  }
-
-  isAccessTokenExpired(): boolean {
-    const token = this.getAccessToken();
-    return this.isTokenExpired(token);
   }
 }

@@ -112,7 +112,7 @@ export class Events {
         today: filter === EventFilter.Today ? true : null,
         weekend: filter === EventFilter.Weekend ? true : null,
         page: 1,
-        pageSize: 9,
+        pageSize: 15,
       })
       .pipe(
         catchError((error) => {

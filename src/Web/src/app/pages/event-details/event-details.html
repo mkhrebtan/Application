@@ -32,50 +32,48 @@
     }
 
     <div class="flex flex-col gap-4">
-      @if (eventState() == EventState.CanJoin) {
-        <button
-          (click)="joinEvent()"
-          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+      @if (eventState() != EventState.Organizer) {
+        @if (eventState() == EventState.CanJoin) {
+          <button
+            (click)="joinEvent()"
+            class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
                  bg-green-600 hover:bg-green-500 cursor-pointer"
-        >
-          Join Event
-        </button>
-      }
-
-      @if (eventState() == EventState.Joined) {
-        <button
-          (click)="leaveEvent()"
-          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+          >
+            Join Event
+          </button>
+        } @else if (eventState() == EventState.Joined) {
+          <button
+            (click)="leaveEvent()"
+            class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
                  bg-red-600 hover:bg-red-500 cursor-pointer"
-        >
-          Leave Event
-        </button>
-      }
-
-      @if (eventState() == EventState.Full) {
-        <button
-          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+          >
+            Leave Event
+          </button>
+        } @else if (eventState() == EventState.Full) {
+          <button
+            class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
                  bg-gray-400 cursor-not-allowed"
-          disabled
+            disabled
+          >
+            Event Full
+          </button>
+        }
+      } @else {
+        <button
+          (click)="openEditDialog()"
+          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+              bg-indigo-600 hover:bg-indigo-500 cursor-pointer"
         >
-          Event Full
+          Edit
+        </button>
+        <button
+          (click)="deleteEvent()"
+          class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
+                bg-red-600 hover:bg-red-500 cursor-pointer"
+        >
+          Delete
         </button>
       }
-
-      <button
-        (click)="openEditDialog()"
-        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
-              bg-indigo-600 hover:bg-indigo-500 cursor-pointer"
-      >
-        Edit
-      </button>
-      <button
-        (click)="deleteEvent()"
-        class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md w-full md:self-center lg:self-start md:w-2/3 lg:w-1/2
-                bg-red-600 hover:bg-red-500 cursor-pointer"
-      >
-        Delete
-      </button>
     </div>
   </div>
 
@@ -94,7 +92,8 @@
       @let participants = participants$ | async;
       @if (participants) {
         @for (participant of participants; track participant) {
-          <div class="text-left bg-gray-100 p-2 px-4 rounded-lg">{{ `${participant.fistName} ${participant.lastName}` }}
+          <div
+            class="text-left bg-gray-100 p-2 px-4 rounded-lg">{{ `${participant.firstName} ${participant.lastName}` }}
           </div>
         }
       } @else {

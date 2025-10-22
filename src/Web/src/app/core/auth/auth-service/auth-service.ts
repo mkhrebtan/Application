@@ -3,10 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token-service/token.service';
-import { UUID } from 'node:crypto';
 
 export interface User {
-  id: UUID;
   firstName: string;
   lastName: string;
   email: string;
@@ -15,7 +13,6 @@ export interface User {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
-  user: User;
 }
 
 export interface RefreshTokenResponse {
@@ -28,13 +25,11 @@ export interface RefreshTokenResponse {
 })
 export class AuthService {
   private authUrl = 'https://localhost:5001/auth';
-
+  private userUrl = 'https://localhost:5001/users';
   private http = inject(HttpClient);
   private tokenService = inject(TokenService);
-
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.hasAccessToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -46,11 +41,7 @@ export class AuthService {
     }
 
     if (this.tokenService.hasAccessToken()) {
-      this.loadCurrentUser().subscribe({
-        error: () => {
-          this.logout();
-        },
-      });
+      this.loadCurrentUser();
     }
   }
 
@@ -63,12 +54,11 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.tokenService.setTokens(response.accessToken, response.refreshToken);
-          this.currentUserSubject.next(response.user);
           this.isAuthenticatedSubject.next(true);
+          this.loadCurrentUser();
         }),
         catchError((err) => {
           this.isAuthenticatedSubject.next(false);
-          this.currentUserSubject.next(null);
           return throwError(() => err);
         }),
       );
@@ -90,12 +80,11 @@ export class AuthService {
       .pipe(
         tap((response) => {
           this.tokenService.setTokens(response.accessToken, response.refreshToken);
-          this.currentUserSubject.next(response.user);
           this.isAuthenticatedSubject.next(true);
+          this.loadCurrentUser();
         }),
         catchError((err) => {
           this.isAuthenticatedSubject.next(false);
-          this.currentUserSubject.next(null);
           return throwError(() => err);
         }),
       );
@@ -108,7 +97,7 @@ export class AuthService {
     }
 
     return this.http
-      .post<RefreshTokenResponse>(`${this.authUrl}/refresh`, {
+      .post<RefreshTokenResponse>(`${this.authUrl}/refresh-token`, {
         refreshToken,
       })
       .pipe(
@@ -148,11 +137,15 @@ export class AuthService {
     return this.isAuthenticatedSubject.value;
   }
 
-  private loadCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.authUrl}/me`).pipe(
-      tap((user) => {
+  private loadCurrentUser() {
+    this.http.get<User>(`${this.userUrl}/me`).subscribe({
+      next: (user) => {
         this.currentUserSubject.next(user);
-      }),
-    );
+      },
+      error: (err) => {
+        console.error('Failed to load current user:', err);
+        this.currentUserSubject.next(null);
+      },
+    })
   }
 }

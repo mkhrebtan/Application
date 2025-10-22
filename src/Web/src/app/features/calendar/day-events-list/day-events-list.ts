@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
       @for (event of events.slice(0, 2); track event.id) {
         <div
           (click)="navigateToDetails(event.id)"
-          class="text-xs px-1 py-0.5 rounded mb-1 truncate"
+          class="text-xs px-1 py-0.5 rounded mb-1 truncate cursor-pointer"
           [class.bg-indigo-200]="!event.isUserOrganizer"
           [class.text-indigo-800]="!event.isUserOrganizer"
           [class.bg-green-600]="event.isUserOrganizer"
@@ -28,7 +28,7 @@ import { Router } from '@angular/router';
           @for (event of events.slice(2); track event.id) {
             <div
               (click)="navigateToDetails(event.id)"
-              class="text-xs px-1 py-0.5 rounded mb-1 truncate"
+              class="text-xs px-1 py-0.5 rounded mb-1 truncate cursor-pointer"
               [class.bg-indigo-200]="!event.isUserOrganizer"
               [class.text-indigo-800]="!event.isUserOrganizer"
               [class.bg-green-600]="event.isUserOrganizer"

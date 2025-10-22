@@ -220,6 +220,7 @@ app.MapGet("users/me", async (
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
-    .WithTags("Users");
+    .WithTags("Users")
+    .RequireAuthorization();
 
 await app.RunAsync();

@@ -108,12 +108,14 @@ export class JoinEventDialog {
 
   onSubmit() {
     if (this.joinForm.valid) {
-      this.joinEventSubmit.emit({
+      const formData: IJoinEventData = {
         firstName: this.joinForm.value.firstName!,
         lastName: this.joinForm.value.lastName!,
         email: this.joinForm.value.email!,
-      });
-      this.onClose();
+      };
+      this.joinEventSubmit.emit(formData);
+    } else {
+      this.joinForm.markAllAsTouched();
     }
   }
 }

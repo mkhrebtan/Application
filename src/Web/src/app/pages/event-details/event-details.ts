@@ -12,7 +12,7 @@ import {
   IEventUpdateData,
 } from '../../features/event/edit-event-dialog/edit-event-dialog';
 import { UUID } from 'node:crypto';
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { IEventDetails } from '../../features/event/models/event-details';
 import { catchError, tap } from 'rxjs/operators';
 import {
@@ -29,8 +29,6 @@ import { IEventParticipant } from '../../features/event/models/event-participant
   styles: ``,
 })
 export class EventDetails {
-  protected event$: Observable<IEventDetails>;
-  protected participants$: Observable<IEventParticipant[]>;
   protected readonly faClock = faClock;
   protected readonly faLocationDot = faLocationDot;
   protected readonly faUsers = faUsers;
@@ -47,12 +45,36 @@ export class EventDetails {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private eventId: UUID;
+  private refetchEvent$ = new Subject<IEventDetails>();
+  protected event$ = this.refetchEvent$.asObservable();
+  private refetchParticipants$ = new Subject<IEventParticipant[]>();
+  protected participants$ = this.refetchParticipants$.asObservable();
 
   constructor() {
     this.eventId = this.route.snapshot.params['id'];
 
-    this.event$ = this.loadEventDetails();
-    this.participants$ = this.loadEventParticipants();
+    this.loadEventDetails().subscribe({
+      next: (event) => {
+        this.refetchEvent$.next(event);
+      },
+    });
+    this.loadEventParticipants().subscribe({
+      next: (participants) => {
+        this.refetchParticipants$.next(participants);
+      },
+    });
+
+    this.event$.subscribe((event) => {
+      if (event.isUserOrganizer) {
+        this.eventState.set(EventState.Organizer);
+      } else if (event.isUserParticipating) {
+        this.eventState.set(EventState.Joined);
+      } else if (event.capacity !== null && event.participantsCount >= event.capacity!) {
+        this.eventState.set(EventState.Full);
+      } else {
+        this.eventState.set(EventState.CanJoin);
+      }
+    });
   }
 
   openEditDialog() {
@@ -75,31 +97,46 @@ export class EventDetails {
         capacity: eventData.capacity,
         isPublic: eventData.isPublic,
       })
-      .pipe(
-        tap(() => {
-          this.event$ = this.loadEventDetails();
+      .subscribe({
+        next: () => {
+          this.loadEventDetails().subscribe({
+            next: (event) => {
+              this.refetchEvent$.next(event);
+            },
+          });
+          this.loadEventParticipants().subscribe({
+            next: (participants) => {
+              this.refetchParticipants$.next(participants);
+            },
+          });
           this.closeEditDialog();
-        }),
-        catchError((err) => {
+        },
+        error: (err) => {
           alert(err.error.detail || 'An error occurred while updating the event.');
-          throw err;
-        }),
-      );
+        },
+      });
   }
 
   joinEvent() {
     if (this.authService.isAuthenticated()) {
-      this.eventService.joinEvent(this.eventId).pipe(
-        tap(() => {
+      this.eventService.joinEvent(this.eventId).subscribe({
+        next: () => {
           this.eventState.set(EventState.Joined);
-          this.event$ = this.loadEventDetails();
-          this.participants$ = this.loadEventParticipants();
-        }),
-        catchError((err) => {
+          this.loadEventDetails().subscribe({
+            next: (event) => {
+              this.refetchEvent$.next(event);
+            },
+          });
+          this.loadEventParticipants().subscribe({
+            next: (participants) => {
+              this.refetchParticipants$.next(participants);
+            },
+          });
+        },
+        error: (err) => {
           alert(err.error.detail || 'An error occurred while joining the event.');
-          throw err;
-        }),
-      );
+        },
+      });
     } else {
       this.openJoinEventDialog();
     }
@@ -116,45 +153,58 @@ export class EventDetails {
   }
 
   onJoinEventSubmit(data: IJoinEventData) {
-    this.eventService.joinEvent(this.eventId, data.firstName, data.lastName, data.email).pipe(
-      tap(() => {
+    this.eventService.joinEvent(this.eventId, data.firstName, data.lastName, data.email).subscribe({
+      next: () => {
         this.eventState.set(EventState.Joined);
-        this.event$ = this.loadEventDetails();
-        this.participants$ = this.loadEventParticipants();
+        this.loadEventDetails().subscribe({
+          next: (event) => {
+            this.refetchEvent$.next(event);
+          },
+        });
+        this.loadEventParticipants().subscribe({
+          next: (participants) => {
+            this.refetchParticipants$.next(participants);
+          },
+        });
         this.closeJoinEventDialog();
-      }),
-      catchError((err) => {
+      },
+      error: (err) => {
         alert(err.error.detail || 'An error occurred while joining the event.');
-        throw err;
-      }),
-    );
+      },
+    });
   }
 
   leaveEvent() {
-    this.eventService.leaveEvent(this.eventId).pipe(
-      tap(() => {
+    this.eventService.leaveEvent(this.eventId).subscribe({
+      next: () => {
         this.eventState.set(EventState.CanJoin);
-        this.event$ = this.loadEventDetails();
-        this.participants$ = this.loadEventParticipants();
-      }),
-      catchError((err) => {
+        this.loadEventDetails().subscribe({
+          next: (event) => {
+            this.refetchEvent$.next(event);
+          },
+        });
+        this.loadEventParticipants().subscribe({
+          next: (participants) => {
+            this.refetchParticipants$.next(participants);
+          },
+        });
+      },
+      error: (err) => {
         alert(err.error.detail || 'An error occurred while leaving the event.');
-        throw err;
-      }),
-    );
+      },
+    });
   }
 
   deleteEvent() {
     if (confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
-      this.eventService.deleteEvent(this.eventId).pipe(
-        tap(() => {
+      this.eventService.deleteEvent(this.eventId).subscribe({
+        next: () => {
           this.router.navigate(['/events']);
-        }),
-        catchError((err) => {
+        },
+        error: (err) => {
           alert(err.error.detail || 'An error occurred while deleting the event.');
-          throw err;
-        }),
-      );
+        },
+      });
     }
   }
 

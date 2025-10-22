@@ -8,6 +8,7 @@ import { UUID } from 'node:crypto';
 import { IEventDetails } from '../../features/event/models/event-details';
 import { IEventParticipant } from '../../features/event/models/event-participant';
 import { IUserEvent } from '../../features/event/models/user-event';
+import { IEvent } from '../../features/event/models/event';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,9 @@ export class EventService {
   }
 
   getEventById(eventId: UUID) {
-    return this.http.get<IEventDetails>(`${this.eventsUrl}/${eventId}`);
+    return this.http
+      .get<{ event: IEventDetails }>(`${this.eventsUrl}/${eventId}`)
+      .pipe(map((response) => response.event));
   }
 
   getEventParticipants(eventId: UUID) {
@@ -60,14 +63,7 @@ export class EventService {
       .pipe(map((response) => response.events));
   }
 
-  createEvent(eventData: {
-    title: string;
-    description: string;
-    date: string;
-    location: string;
-    capacity?: number;
-    isPublic: boolean;
-  }) {
+  createEvent(eventData: IEvent) {
     return this.http
       .post<{ eventId: UUID }>(this.eventsUrl, eventData)
       .pipe(map((response) => response.eventId));
@@ -87,7 +83,19 @@ export class EventService {
       isPublic: boolean | null;
     },
   ) {
-    return this.http.put(`${this.eventsUrl}/${eventId}`, eventData);
+    const requestBody: any = {
+      title: eventData.title,
+      description: eventData.description,
+      date: eventData.date,
+      location: eventData.location,
+      isPublic: eventData.isPublic,
+      capacity: {
+        isSpecified: eventData.capacity.isSpecified,
+        value: eventData.capacity.value,
+      }
+    };
+
+    return this.http.patch(`${this.eventsUrl}/${eventId}`, requestBody);
   }
 
   joinEvent(eventId: UUID, firstName?: string, lastName?: string, email?: string) {
