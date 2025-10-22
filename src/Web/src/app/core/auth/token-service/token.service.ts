@@ -39,8 +39,8 @@ export class TokenService {
   }
 
   clearTokens(): void {
-    this.cookieService.delete('accessToken');
-    this.cookieService.delete('refreshToken');
+    this.cookieService.delete('accessToken', '/');
+    this.cookieService.delete('refreshToken', '/');
   }
 
   hasAccessToken(): boolean {

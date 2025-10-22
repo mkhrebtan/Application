@@ -4,10 +4,11 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { IUserEvent } from '../../event/models/user-event';
 import { UUID } from 'node:crypto';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-day-events-list',
-  imports: [FaIconComponent],
+  imports: [FaIconComponent, DatePipe],
   template: `
     <div class="p-2 rounded-md" [class.bg-white]="isExpanded()" [class.shadow-sm]="isExpanded()">
       @for (event of events.slice(0, 2); track event.id) {
@@ -19,7 +20,7 @@ import { Router } from '@angular/router';
           [class.bg-green-600]="event.isUserOrganizer"
           [class.text-white]="event.isUserOrganizer"
         >
-          {{ event.title }}
+          {{ event.date | date: 'shortTime' }} - {{ event.title }}
         </div>
       }
 
