@@ -1,10 +1,22 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { Backdrop } from '../../../shared/components/backdrop/backdrop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IEvent } from '../models/event';
 import { EventForm } from '../event-form/event-form';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IEventDetails } from '../models/event-details';
+
+export interface IEventUpdateData {
+  title: string | null;
+  description: string | null;
+  date: string | null;
+  location: string | null;
+  capacity: {
+    isSpecified: boolean;
+    value: number | null;
+  }
+  isPublic: boolean | null;
+}
 
 @Component({
   selector: 'app-edit-event-dialog',
@@ -14,8 +26,9 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 })
 export class EditEventDialog implements OnInit {
   @Output() closeDialog = new EventEmitter<void>();
-  @Input() event!: IEvent;
-
+  @Output() submitEvent = new EventEmitter<IEventUpdateData>();
+  @Input() event!: IEventDetails;
+  protected readonly faXmark = faXmark;
   private readonly formBuilder = inject(FormBuilder);
   protected readonly eventCreationForm = this.formBuilder.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -26,20 +39,17 @@ export class EditEventDialog implements OnInit {
     visibility: ['public', [Validators.required]],
   });
 
-  protected readonly faXmark = faXmark;
-
   ngOnInit() {
     if (this.event) {
-      const localDate = new Date(
-        this.event.date.getTime() - this.event.date.getTimezoneOffset() * 60000,
-      );
+      const eventDate = new Date(this.event.date);
+      const localDate = new Date(eventDate.getTime() - eventDate.getTimezoneOffset() * 60000);
       this.eventCreationForm.patchValue({
         title: this.event.title,
         description: this.event.description,
         date: localDate.toISOString().slice(0, 16),
         location: this.event.location,
         capacity: this.event.capacity,
-        visibility: this.event.visibility,
+        visibility: this.event.isPublic ? 'public' : 'private',
       });
     }
   }
@@ -47,9 +57,24 @@ export class EditEventDialog implements OnInit {
   onSubmit() {
     if (this.eventCreationForm.valid) {
       const formData = this.eventCreationForm.value;
-      console.log('Event Created:', formData);
+      formData.date = new Date(formData.date!).toISOString();
+
+      const updateData: IEventUpdateData = {
+        title: formData.title! === this.event.title ? null : formData.title!,
+        description: formData.description! === this.event.description ? null : formData.description!,
+        date: formData.date! === this.event.date ? null : formData.date!,
+        location: formData.location! === this.event.location ? null : formData.location!,
+        capacity: {
+          isSpecified: formData.capacity !== this.event.capacity,
+          value: formData.capacity !== this.event.capacity ? formData.capacity! : null,
+        },
+        isPublic: (formData.visibility! === 'public') === this.event.isPublic ? null : (formData.visibility! === 'public'),
+      }
+
+      this.submitEvent.emit(updateData);
+      this.onClose();
     } else {
-      console.log('Form is invalid');
+      this.eventCreationForm.markAsTouched();
     }
   }
 

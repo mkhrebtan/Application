@@ -79,7 +79,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                 e.EventParticipants.Any(ep =>
                     (userId.HasValue && ep.UserId == userId.Value) ||
                     (visitorId.HasValue && ep.VisitorId == visitorId.Value)),
-                userId.HasValue && e.OrganizerId == userId.Value))
+                userId.HasValue && e.OrganizerId == userId.Value,
+                e.IsPublic))
             .FirstOrDefaultAsync(cancellationToken);
         return eventDetailsDto;
     }
@@ -105,8 +106,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
         var eventParticipants = dbContext.EventParticipants
             .Where(ep => ep.EventId == eventId)
             .Select(ep => new EventParticipantDto(
-                ep.User!.FirstName,
-                ep.User.LastName,
+                ep.User == null ? ep.VisitorFirstName : ep.User.FirstName,
+                ep.User == null ? ep.VisitorLastName : ep.User.LastName,
                 ep.JoinedAt))
             .ToListAsync(cancellationToken);
         return eventParticipants;

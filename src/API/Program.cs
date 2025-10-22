@@ -14,6 +14,7 @@ using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
+using Application.Queries.Users.GetUser;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
@@ -138,11 +139,12 @@ app.MapDelete("/events/{id:guid}", async (
 
 app.MapPost("/events/{id:guid}/join", async (
         Guid id,
+        [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
         JoinEventCommand request,
         ICommandHandler<JoinEventCommand> handler,
         CancellationToken cancellationToken) =>
     {
-        request = request with { EventId = id, };
+        request = request with { EventId = id, VisitorId = visitorId, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
     })
@@ -150,11 +152,12 @@ app.MapPost("/events/{id:guid}/join", async (
 
 app.MapPost("/events/{id:guid}/leave", async (
         Guid id,
+        [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
         LeaveEventCommand request,
         ICommandHandler<LeaveEventCommand> handler,
         CancellationToken cancellationToken) =>
     {
-        request = request with { EventId = id, };
+        request = request with { EventId = id, VisitorId = visitorId, };
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
     })
@@ -208,5 +211,16 @@ app.MapGet("/events/{id:guid}/participants", async (
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
     .WithTags("Events");
+
+app.MapGet("users/me", async (
+        IQueryHandler<GetUserQuery, GetUserQueryResponse> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new GetUserQuery();
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Users")
+    .RequireAuthorization();
 
 await app.RunAsync();

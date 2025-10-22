@@ -5,7 +5,7 @@ namespace Application.Commands.EventParticipants.Join;
 
 public record JoinEventCommand(
     [property: JsonIgnore] Guid EventId,
-    Guid? VisitorId,
+    [property: JsonIgnore] Guid? VisitorId,
     string? VisitorFirstName,
     string? VisitorLastName,
     string? VisitorEmail) : ICommand;

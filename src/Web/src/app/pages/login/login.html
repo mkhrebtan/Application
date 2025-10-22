@@ -6,8 +6,8 @@
     <p class="mt-2 text-center text-sm text-gray-600">
       Or
       <a
-        routerLink="/signup"
         class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+        routerLink="/signup"
       >
         create a new account
       </a>
@@ -17,12 +17,13 @@
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
       <form
-        id="loginForm"
-        [formGroup]="loginForm"
         (ngSubmit)="onSubmit()"
+        [formGroup]="loginForm"
         class="flex flex-col gap-6"
+        id="loginForm"
       >
-        <app-form-input [control]="email!" [type]="'email'" [label]="'Email address'" [id]="'email'" [autocomplete]="'email'" [placeholder]="'Enter your email'">
+        <app-form-input [autocomplete]="'email'" [control]="email!" [id]="'email'" [label]="'Email address'"
+                        [placeholder]="'Enter your email'" [type]="'email'">
           @if (email?.hasError('required')) {
             <span error-message>Email is required</span>
           } @else if (email?.hasError('email')) {
@@ -30,7 +31,8 @@
           }
         </app-form-input>
 
-        <app-form-input [control]="password!" [type]="'password'" [label]="'Password'" [id]="'password'" [autocomplete]="'current-password'" [placeholder]="'Enter your password'">
+        <app-form-input [autocomplete]="'current-password'" [control]="password!" [id]="'password'" [label]="'Password'"
+                        [placeholder]="'Enter your password'" [type]="'password'">
           @if (password?.hasError('required')) {
             <span error-message>Password is required</span>
           } @else if (password?.hasError('minlength')) {
@@ -38,27 +40,15 @@
           }
         </app-form-input>
 
-        <div class="flex items-center">
-          <input
-            id="remember-me"
-            formControlName="rememberMe"
-            type="checkbox"
-            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-          />
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-            Remember me
-          </label>
-        </div>
-
         <div>
           <button
-            type="submit"
-            form="loginForm"
             [disabled]="loginForm.invalid || isLoading()"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer transition-all duration-300"
+            form="loginForm"
+            type="submit"
           >
             @if (isLoading()) {
-              <fa-icon [icon]="faSpinner" class="animate-spin mr-2" />
+              <fa-icon [icon]="faSpinner" class="animate-spin mr-2"/>
               Logging in...
             } @else {
               Log in
@@ -71,7 +61,7 @@
         <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
           <div class="flex">
             <div class="flex-shrink-0">
-              <fa-icon [icon]="faCircleXmark" class="h-5 w-5 text-red-400" />
+              <fa-icon [icon]="faCircleXmark" class="h-5 w-5 text-red-400"/>
             </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium text-red-800">

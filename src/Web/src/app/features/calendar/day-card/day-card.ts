@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CalendarViewMode } from '../models/calendar-view-mode';
 import { DatePipe } from '@angular/common';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { DayEventsList } from '../day-events-list/day-events-list';
+import { IUserEvent } from '../../event/models/user-event';
 
 @Component({
   selector: 'app-day-card',
@@ -10,7 +10,7 @@ import { DayEventsList } from '../day-events-list/day-events-list';
   template: `
     @if (viewMode === calendarViewMode.Month) {
       <div
-        class="p-1 flex flex-col aspect-3/2 max-h-34 w-full"
+        class="p-1 flex flex-col aspect-1/3 md:aspect-1/2 lg:aspect-3/2 max-h-34 w-full"
         [class.bg-gray-100]="!isDisplayedMonth"
         [class.text-gray-400]="!isDisplayedMonth"
         [class.text-indigo-600]="isPresentDay"
@@ -57,7 +57,7 @@ import { DayEventsList } from '../day-events-list/day-events-list';
 })
 export class DayCard implements OnInit {
   @Input() date!: Date;
-  @Input() events: any[] = [];
+  @Input() events: IUserEvent[] = [];
   @Input() viewMode!: CalendarViewMode;
   @Input() isDisplayedMonth: boolean = true;
 

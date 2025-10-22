@@ -1,9 +1,15 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Backdrop } from '../../../shared/components/backdrop/backdrop';
 import { FormInput } from '../../../shared/components/form-input/form-input';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+
+export interface IJoinEventData {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 @Component({
   selector: 'app-join-event-dialog',
@@ -75,12 +81,8 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 })
 export class JoinEventDialog {
   @Output() closeDialog = new EventEmitter<void>();
-  @Output() joinEventSubmit = new EventEmitter<{
-    firstName: string;
-    lastName: string;
-    email: string;
-  }>();
-
+  @Output() joinEventSubmit = new EventEmitter<IJoinEventData>();
+  protected readonly faXmark = faXmark;
   private readonly formBuilder = inject(FormBuilder);
   protected readonly joinForm = this.formBuilder.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -106,14 +108,14 @@ export class JoinEventDialog {
 
   onSubmit() {
     if (this.joinForm.valid) {
-      this.joinEventSubmit.emit({
+      const formData: IJoinEventData = {
         firstName: this.joinForm.value.firstName!,
         lastName: this.joinForm.value.lastName!,
         email: this.joinForm.value.email!,
-      });
-      this.onClose();
+      };
+      this.joinEventSubmit.emit(formData);
+    } else {
+      this.joinForm.markAllAsTouched();
     }
   }
-
-  protected readonly faXmark = faXmark;
 }

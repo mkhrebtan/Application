@@ -1,5 +1,12 @@
 ﻿<div class="pt-8 pb-8 flex flex-col gap-10">
-  <app-hero-section [title]="heroTitle" [description]="heroDescription" />
+  <app-hero-section [description]="heroDescription" [title]="heroTitle"/>
 
-  <app-calendar-view [events]="events" />
+  @let events = events$ | async;
+  @if (events) {
+    @if (events.length === 0) {
+      <p class="text-center">You are not part of any events yet. Explore public events and join.</p>
+    } @else {
+      <app-calendar-view [events]="events"/>
+    }
+  }
 </div>

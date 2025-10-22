@@ -66,7 +66,6 @@ export class Events {
   private readonly eventService = inject(EventService);
 
   constructor() {
-    // Combine search term changes and filter changes
     const searchTerm$ = this.searchControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -113,7 +112,7 @@ export class Events {
         today: filter === EventFilter.Today ? true : null,
         weekend: filter === EventFilter.Weekend ? true : null,
         page: 1,
-        pageSize: 9,
+        pageSize: 15,
       })
       .pipe(
         catchError((error) => {

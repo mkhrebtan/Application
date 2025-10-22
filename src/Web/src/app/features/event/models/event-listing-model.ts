@@ -1,10 +1,12 @@
-﻿export interface RequesterStatus {
+﻿import { UUID } from 'node:crypto';
+
+export interface RequesterStatus {
   isParticipating: boolean;
   isOrganizer: boolean;
 }
 
 export interface IEventListingModel {
-  id: string;
+  id: UUID;
   title: string;
   description: string;
   date: string;
