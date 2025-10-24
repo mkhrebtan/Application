@@ -79,6 +79,20 @@ internal static class DatabaseSeeder
             _preHashedPassword).Value,
     };
 
+    internal static readonly Tag[] Tags =
+    [
+        new("Technology"),
+        new("Art"),
+        new("Health"),
+        new("Education"),
+        new("Networking"),
+        new("Music"),
+        new("Sports"),
+        new("Food & Drink"),
+        new("Business"),
+        new("Travel"),
+    ];
+
     internal static Event[] Events(User[] users)
     {
         return
@@ -491,6 +505,187 @@ internal static class DatabaseSeeder
                 visitorFirstName: "Michael",
                 visitorLastName: "Brown",
                 visitorEmail: "michael.brown@example.com"),
+        ];
+    }
+
+    internal static EventTag[] EventTags(Event[] events, Tag[] tags)
+    {
+        return
+        [
+            // Community Meetup - Networking, Business, Education
+            new EventTag(events[0].Id, tags[4].Id), // Networking (existing)
+            new EventTag(events[0].Id, tags[8].Id), // Business
+            new EventTag(events[0].Id, tags[3].Id), // Education
+
+            // Tech Conference - Technology, Business, Networking, Education
+            new EventTag(events[1].Id, tags[0].Id), // Technology (existing)
+            new EventTag(events[1].Id, tags[8].Id), // Business
+            new EventTag(events[1].Id, tags[4].Id), // Networking
+            new EventTag(events[1].Id, tags[3].Id), // Education
+
+            // Art Workshop - Art, Education, Networking
+            new EventTag(events[2].Id, tags[1].Id), // Art (existing)
+            new EventTag(events[2].Id, tags[3].Id), // Education
+            new EventTag(events[2].Id, tags[4].Id), // Networking
+
+            // Private Dinner Party - Business, Food & Drink, Networking
+            new EventTag(events[3].Id, tags[8].Id), // Business (existing)
+            new EventTag(events[3].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[3].Id, tags[4].Id), // Networking
+
+            // Board Game Night - Education, Networking
+            new EventTag(events[4].Id, tags[3].Id), // Education (existing)
+            new EventTag(events[4].Id, tags[4].Id), // Networking
+
+            // Yoga Class - Music, Health, Education
+            new EventTag(events[5].Id, tags[5].Id), // Music (existing)
+            new EventTag(events[5].Id, tags[2].Id), // Health
+            new EventTag(events[5].Id, tags[3].Id), // Education
+
+            // Family Reunion - Travel, Food & Drink, Networking
+            new EventTag(events[6].Id, tags[9].Id), // Travel (existing)
+            new EventTag(events[6].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[6].Id, tags[4].Id), // Networking
+
+            // City Marathon - Sports, Health, Business, Travel
+            new EventTag(events[7].Id, tags[6].Id), // Sports (existing)
+            new EventTag(events[7].Id, tags[2].Id), // Health
+            new EventTag(events[7].Id, tags[8].Id), // Business
+            new EventTag(events[7].Id, tags[9].Id), // Travel
+
+            // Book Club Meeting - Health, Education, Networking
+            new EventTag(events[8].Id, tags[2].Id), // Health (existing)
+            new EventTag(events[8].Id, tags[3].Id), // Education
+            new EventTag(events[8].Id, tags[4].Id), // Networking
+
+            // Cooking Workshop - Technology, Food & Drink, Education, Business
+            new EventTag(events[9].Id, tags[0].Id), // Technology (existing)
+            new EventTag(events[9].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[9].Id, tags[3].Id), // Education
+            new EventTag(events[9].Id, tags[8].Id), // Business
+
+            // Investment Seminar - Business, Education, Networking, Technology
+            new EventTag(events[10].Id, tags[8].Id), // Business (existing)
+            new EventTag(events[10].Id, tags[3].Id), // Education
+            new EventTag(events[10].Id, tags[4].Id), // Networking
+            new EventTag(events[10].Id, tags[0].Id), // Technology
+
+            // Music Festival - Music, Art, Travel, Food & Drink, Business
+            new EventTag(events[11].Id, tags[5].Id), // Music (existing)
+            new EventTag(events[11].Id, tags[1].Id), // Art
+            new EventTag(events[11].Id, tags[9].Id), // Travel
+            new EventTag(events[11].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[11].Id, tags[8].Id), // Business
+
+            // Wine Tasting Evening - Food & Drink, Business, Networking
+            new EventTag(events[12].Id, tags[7].Id), // Food & Drink (existing)
+            new EventTag(events[12].Id, tags[8].Id), // Business
+            new EventTag(events[12].Id, tags[4].Id), // Networking
+
+            // Photography Masterclass - Art, Education, Technology, Business
+            new EventTag(events[13].Id, tags[1].Id), // Art (existing)
+            new EventTag(events[13].Id, tags[3].Id), // Education
+            new EventTag(events[13].Id, tags[0].Id), // Technology
+            new EventTag(events[13].Id, tags[8].Id), // Business
+
+            // Corporate Team Building - Networking, Business, Sports, Health
+            new EventTag(events[14].Id, tags[4].Id), // Networking (existing)
+            new EventTag(events[14].Id, tags[8].Id), // Business
+            new EventTag(events[14].Id, tags[6].Id), // Sports
+            new EventTag(events[14].Id, tags[2].Id), // Health
+
+            // Street Food Festival - Education, Food & Drink, Travel, Business
+            new EventTag(events[15].Id, tags[3].Id), // Education (existing)
+            new EventTag(events[15].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[15].Id, tags[9].Id), // Travel
+            new EventTag(events[15].Id, tags[8].Id), // Business
+
+            // Poetry Reading Circle - Travel, Art, Education
+            new EventTag(events[16].Id, tags[9].Id), // Travel (existing)
+            new EventTag(events[16].Id, tags[1].Id), // Art
+            new EventTag(events[16].Id, tags[3].Id), // Education
+
+            // Blockchain Summit - Health, Technology, Business, Education, Networking
+            new EventTag(events[17].Id, tags[2].Id), // Health (existing)
+            new EventTag(events[17].Id, tags[0].Id), // Technology
+            new EventTag(events[17].Id, tags[8].Id), // Business
+            new EventTag(events[17].Id, tags[3].Id), // Education
+            new EventTag(events[17].Id, tags[4].Id), // Networking
+
+            // Bachelor Party - Technology, Travel, Food & Drink, Sports
+            new EventTag(events[18].Id, tags[0].Id), // Technology (existing)
+            new EventTag(events[18].Id, tags[9].Id), // Travel
+            new EventTag(events[18].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[18].Id, tags[6].Id), // Sports
+
+            // Charity Walk - Sports, Health, Business, Networking
+            new EventTag(events[19].Id, tags[6].Id), // Sports (existing)
+            new EventTag(events[19].Id, tags[2].Id), // Health
+            new EventTag(events[19].Id, tags[8].Id), // Business
+            new EventTag(events[19].Id, tags[4].Id), // Networking
+
+            // Exclusive Product Launch - Business, Technology, Networking, Art
+            new EventTag(events[20].Id, tags[8].Id), // Business (existing)
+            new EventTag(events[20].Id, tags[0].Id), // Technology
+            new EventTag(events[20].Id, tags[4].Id), // Networking
+            new EventTag(events[20].Id, tags[1].Id), // Art
+
+            // Dance Class Beginner - Music, Health, Education, Art
+            new EventTag(events[21].Id, tags[5].Id), // Music (existing)
+            new EventTag(events[21].Id, tags[2].Id), // Health
+            new EventTag(events[21].Id, tags[3].Id), // Education
+            new EventTag(events[21].Id, tags[1].Id), // Art
+
+            // Wedding Anniversary - Food & Drink, Travel, Music
+            new EventTag(events[22].Id, tags[7].Id), // Food & Drink (existing)
+            new EventTag(events[22].Id, tags[9].Id), // Travel
+            new EventTag(events[22].Id, tags[5].Id), // Music
+
+            // Open Mic Night - Art, Music, Education, Networking
+            new EventTag(events[23].Id, tags[1].Id), // Art (existing)
+            new EventTag(events[23].Id, tags[5].Id), // Music
+            new EventTag(events[23].Id, tags[3].Id), // Education
+            new EventTag(events[23].Id, tags[4].Id), // Networking
+
+            // Strategy Planning Session - Networking, Business, Education
+            new EventTag(events[24].Id, tags[4].Id), // Networking (existing)
+            new EventTag(events[24].Id, tags[8].Id), // Business
+            new EventTag(events[24].Id, tags[3].Id), // Education
+
+            // Science Fair - Education, Technology, Art, Networking
+            new EventTag(events[25].Id, tags[3].Id), // Education (existing)
+            new EventTag(events[25].Id, tags[0].Id), // Technology
+            new EventTag(events[25].Id, tags[1].Id), // Art
+            new EventTag(events[25].Id, tags[4].Id), // Networking
+
+            // Birthday Surprise Party - Travel, Food & Drink, Music
+            new EventTag(events[26].Id, tags[9].Id), // Travel (existing)
+            new EventTag(events[26].Id, tags[7].Id), // Food & Drink
+            new EventTag(events[26].Id, tags[5].Id), // Music
+
+            // Film Screening - Health, Art, Education, Business
+            new EventTag(events[27].Id, tags[2].Id), // Health (existing)
+            new EventTag(events[27].Id, tags[1].Id), // Art
+            new EventTag(events[27].Id, tags[3].Id), // Education
+            new EventTag(events[27].Id, tags[8].Id), // Business
+
+            // Meditation Retreat - Sports, Health, Education, Travel
+            new EventTag(events[28].Id, tags[6].Id), // Sports (existing)
+            new EventTag(events[28].Id, tags[2].Id), // Health
+            new EventTag(events[28].Id, tags[3].Id), // Education
+            new EventTag(events[28].Id, tags[9].Id), // Travel
+
+            // Job Fair - Technology, Business, Education, Networking
+            new EventTag(events[29].Id, tags[0].Id), // Technology (existing)
+            new EventTag(events[29].Id, tags[8].Id), // Business
+            new EventTag(events[29].Id, tags[3].Id), // Education
+            new EventTag(events[29].Id, tags[4].Id), // Networking
+
+            // Alumni Gathering - Business, Education, Networking, Travel
+            new EventTag(events[30].Id, tags[8].Id), // Business (existing)
+            new EventTag(events[30].Id, tags[3].Id), // Education
+            new EventTag(events[30].Id, tags[4].Id), // Networking
+            new EventTag(events[30].Id, tags[9].Id), // Travel
         ];
     }
 }
