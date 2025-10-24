@@ -14,6 +14,7 @@ using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
+using Application.Queries.Tags.GetTags;
 using Application.Queries.Users.GetUser;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -222,5 +223,14 @@ app.MapGet("users/me", async (
     })
     .WithTags("Users")
     .RequireAuthorization();
+
+app.MapGet("tags", async (
+        IQueryHandler<GetTagsQuery, GetTagsQueryResponse> queryHandler) =>
+    {
+        var query = new GetTagsQuery();
+        var result = await queryHandler.Handle(query, CancellationToken.None);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Tags");
 
 await app.RunAsync();
