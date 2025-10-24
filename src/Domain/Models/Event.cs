@@ -43,6 +43,8 @@ public class Event : Model
 
     public List<EventParticipant> EventParticipants { get; private set; } = [];
 
+    public List<EventTag> EventTags { get; private set; } = [];
+
     public static Result<Event> Create(
         Guid organizerId,
         string title,

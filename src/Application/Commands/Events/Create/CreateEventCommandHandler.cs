@@ -7,29 +7,32 @@ using Domain.Shared.ErrorHandling;
 
 namespace Application.Commands.Events.Create;
 
-internal sealed class CreateEventCommandHandler : ICommandHandler<CreateEventCommand, CreateEventCommandResponse>
+internal sealed class CreateEventCommandHandler(
+    IEventRepository eventRepository,
+    IUnitOfWork unitOfWork,
+    IUserContext userContext,
+    ITagRepository tagRepository,
+    IEventTagRepository eventTagRepository)
+    : ICommandHandler<CreateEventCommand, CreateEventCommandResponse>
 {
-    private readonly IEventRepository _eventRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IUserContext _userContext;
-
-    public CreateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork, IUserContext userContext)
-    {
-        _eventRepository = eventRepository;
-        _unitOfWork = unitOfWork;
-        _userContext = userContext;
-    }
-
     public async Task<Result<CreateEventCommandResponse>> Handle(
         CreateEventCommand request,
         CancellationToken cancellationToken = default)
     {
-        var userId = _userContext.UserId;
+        var userId = userContext.UserId;
         if (userId is null)
         {
             return Result<CreateEventCommandResponse>.Failure(Error.Problem(
                 "CreateEvent.Unauthenticated",
                 "User must be authenticated to create an event."));
+        }
+
+        var tagsExist = await tagRepository.TagIdsExistAsync(request.TagIds, cancellationToken);
+        if (!tagsExist)
+        {
+            return Result<CreateEventCommandResponse>.Failure(Error.Problem(
+                "CreateEvent.InvalidTags",
+                "One or more provided tag IDs do not exist."));
         }
 
         var newEventResult = Event.Create(
@@ -45,8 +48,11 @@ internal sealed class CreateEventCommandHandler : ICommandHandler<CreateEventCom
             return Result<CreateEventCommandResponse>.Failure(newEventResult.Error);
         }
 
-        _eventRepository.Add(newEventResult.Value);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        eventRepository.Add(newEventResult.Value);
+        eventTagRepository.AddRange(request.TagIds.Select(tagId =>
+            new EventTag(tagId: tagId, eventId: newEventResult.Value.Id)));
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         var response = new CreateEventCommandResponse(newEventResult.Value.Id);
         return Result<CreateEventCommandResponse>.Success(response);
     }

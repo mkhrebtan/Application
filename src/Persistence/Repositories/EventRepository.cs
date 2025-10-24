@@ -17,4 +17,10 @@ public class EventRepository(ApplicationDbContext context) : GenericRepository<E
     {
         return await query.ToListAsync(cancellationToken);
     }
+
+    public async Task<Event?> GetByIdWithTagsAsync(Guid eventId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.Include(e => e.EventParticipants)
+            .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+    }
 }

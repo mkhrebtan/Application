@@ -8,5 +8,6 @@ public record CreateEventCommand(
     DateTime Date,
     string Location,
     int? Capacity,
-    bool IsPublic)
+    bool IsPublic,
+    Guid[] TagIds)
     : ICommand<CreateEventCommandResponse>;

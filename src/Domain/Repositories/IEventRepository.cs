@@ -8,4 +8,6 @@ public interface IEventRepository : IRepository<Event>
 
     Task<IEnumerable<Event>> MaterializeEventsQueryAsync(IQueryable<Event> query,
         CancellationToken cancellationToken = default);
+
+    Task<Event?> GetByIdWithTagsAsync(Guid eventId, CancellationToken cancellationToken = default);
 }

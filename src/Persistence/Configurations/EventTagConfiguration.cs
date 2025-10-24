@@ -10,7 +10,7 @@ public class EventTagConfiguration : IEntityTypeConfiguration<EventTag>
     {
         builder.HasKey(x => new { x.EventId, x.TagId, });
         builder.HasOne<Event>()
-            .WithMany()
+            .WithMany(e => e.EventTags)
             .HasForeignKey(et => et.EventId)
             .OnDelete(DeleteBehavior.Cascade);
         builder.HasOne<Tag>()

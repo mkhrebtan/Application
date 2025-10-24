@@ -11,4 +11,5 @@ public record UpdateEventCommand(
     DateTime? Date,
     string? Location,
     OptionalUpdate<int?> Capacity,
-    bool? IsPublic) : ICommand;
+    bool? IsPublic,
+    Guid[] TagIds) : ICommand;
