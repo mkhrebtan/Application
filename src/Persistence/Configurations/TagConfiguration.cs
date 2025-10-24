@@ -11,7 +11,7 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
         builder.HasMany<EventTag>()
-            .WithOne()
+            .WithOne(et => et.Tag)
             .HasForeignKey(et => et.TagId);
     }
 }

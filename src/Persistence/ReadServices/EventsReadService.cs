@@ -3,6 +3,7 @@ using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
+using Application.Queries.Tags.GetTags;
 using Application.ReadServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +56,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                 e.EventParticipants.Any(ep =>
                     (userId.HasValue && ep.UserId == userId.Value) ||
                     (visitorId.HasValue && ep.VisitorId == visitorId.Value)),
-                userId.HasValue && e.OrganizerId == userId.Value)));
+                userId.HasValue && e.OrganizerId == userId.Value),
+            e.EventTags.Select(et => new TagDto(et.TagId, et.Tag.Name))));
 
         return await pagedList.Create(eventListingDtos, pageNumber, pageSize);
     }
@@ -80,7 +82,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                     (userId.HasValue && ep.UserId == userId.Value) ||
                     (visitorId.HasValue && ep.VisitorId == visitorId.Value)),
                 userId.HasValue && e.OrganizerId == userId.Value,
-                e.IsPublic))
+                e.IsPublic,
+                e.EventTags.Select(et => new TagDto(et.TagId, et.Tag.Name))))
             .FirstOrDefaultAsync(cancellationToken);
         return eventDetailsDto;
     }

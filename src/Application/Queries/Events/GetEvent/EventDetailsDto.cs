@@ -1,4 +1,6 @@
-﻿namespace Application.Queries.Events.GetEvent;
+﻿using Application.Queries.Tags.GetTags;
+
+namespace Application.Queries.Events.GetEvent;
 
 public record EventDetailsDto(
     Guid Id,
@@ -10,4 +12,5 @@ public record EventDetailsDto(
     int ParticipantsCount,
     bool IsUserParticipating,
     bool IsUserOrganizer,
-    bool IsPublic);
+    bool IsPublic,
+    IEnumerable<TagDto> Tags);

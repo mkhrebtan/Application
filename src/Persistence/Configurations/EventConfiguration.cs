@@ -19,5 +19,11 @@ internal sealed class EventConfiguration : IEntityTypeConfiguration<Event>
             .WithMany()
             .HasForeignKey(x => x.OrganizerId)
             .IsRequired();
+        builder.HasMany<EventTag>()
+            .WithOne(x => x.Event)
+            .HasForeignKey(x => x.EventId);
+        builder.HasMany<EventParticipant>()
+            .WithOne(x => x.Event)
+            .HasForeignKey(x => x.EventId);
     }
 }
