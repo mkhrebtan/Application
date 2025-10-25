@@ -2,9 +2,6 @@ import { Routes } from '@angular/router';
 import { Events } from './pages/events/events';
 import { NotFound } from './pages/not-found/not-found';
 import { Main } from './layout/main/main';
-import { MyEvents } from './pages/my-events/my-events';
-import { CreateEvent } from './pages/create-event/create-event';
-import { EventDetails } from './pages/event-details/event-details';
 import { authGuard } from './core/auth/auth-guard/auth-guard';
 
 export const routes: Routes = [
@@ -19,19 +16,20 @@ export const routes: Routes = [
       },
       {
         path: 'my-events',
-        component: MyEvents,
+        loadComponent: () => import('./pages/my-events/my-events').then((m) => m.MyEvents),
         title: 'My Events',
         canActivate: [authGuard],
       },
       {
         path: 'create-event',
-        component: CreateEvent,
+        loadComponent: () => import('./pages/create-event/create-event').then((m) => m.CreateEvent),
         title: 'Create Event',
         canActivate: [authGuard],
       },
       {
         path: 'events/:id',
-        component: EventDetails,
+        loadComponent: () =>
+          import('./pages/event-details/event-details').then((m) => m.EventDetails),
         title: 'Event Details',
       },
       { path: '', redirectTo: 'events', pathMatch: 'full' },

@@ -1,141 +1,166 @@
 ﻿<div>
   <form
-    id="eventCreationForm"
-    [formGroup]="formGroup"
     (ngSubmit)="onSubmit()"
+    [formGroup]="formGroup"
     class="flex flex-col gap-6 lg:flex-row lg:gap-8"
+    id="eventCreationForm"
   >
     <div
-      class="w-full lg:w-1/2 flex flex-col gap-6 bg-gray-50 rounded-lg border border-gray-200"
+      class="w-full lg:w-1/2 flex flex-col gap-6 bg-gray-50 rounded-lg border border-gray-200 p-4"
     >
-      <app-form-input
-        [control]="title!"
-        [label]="'Event Title'"
-        [id]="'title'"
-        [placeholder]="'Enter event title'"
-        class="p-4"
-      >
-        @if (title?.hasError('required')) {
-          <span error-message>Event title is required</span>
-        } @else if (title?.hasError('maxlength')) {
-          <span error-message>Title must be less than 100 characters</span>
-        }
-      </app-form-input>
-
-      <div class="flex flex-col gap-2 p-4 h-full">
-        <label for="description" class="text-sm font-medium text-gray-700">
-          Description <span class="text-red-500">*</span>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="title">
+          Event Title
+          <span class="text-red-500">*</span>
         </label>
-        <textarea
-          id="description"
-          formControlName="description"
-          class="w-full pt-2 pb-2 px-3 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 h-full focus:ring-gray-400 focus:border-gray-400 transition-colors"
-          placeholder="Describe your event in detail..."
-          [ngClass]="{
-                'border-red-500 focus:border-red-500 focus:ring-red-500':
-                  description?.invalid && description?.touched,
-              }"
-        ></textarea>
-        @if (description?.invalid && description?.touched) {
-          <div class="text-red-500 text-xs mt-1">
-            @if (description?.hasError('required')) {
-              <span>Description is required</span>
-            } @else if (description?.hasError('maxlength')) {
-              <span>Description must be less than 500 characters</span>
+        <input [invalid]="isInvalidAndTouched('title')" fluid
+               formControlName="title"
+               id="title"
+               pInputText placeholder="Enter event title"
+               type="text"/>
+        @if (isInvalidAndTouched('title')) {
+          @if (title?.hasError('required')) {
+            <p-message severity="error" size="small" variant="simple">Event title is required</p-message>
+          } @else if (title?.hasError('maxlength')) {
+            <p-message severity="error" size="small" variant="simple">Title must be less than 100 characters
+            </p-message>
+          }
+        }
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="description">
+          Description
+        </label>
+        <textarea [autoResize]="true" [invalid]="isInvalidAndTouched('description')"
+                  fluid formControlName="description" id="description"
+                  pTextarea placeholder="Describe your event in detail..." rows="5"></textarea>
+        @if (isInvalidAndTouched('description')) {
+          <p-message severity="error" size="small" variant="simple">
+            Description must be less than 500 characters
+          </p-message>
+        }
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium text-gray-800 mb-4">Tags</h3>
+        <div class="space-y-3">
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium text-gray-700" for="description">
+              Select Tags
+              <span class="text-red-500">*</span>
+            </label>
+            <p-multi-select [invalid]="isInvalidAndTouched('tags')" [maxSelectedLabels]="5"
+                            [options]="allTags()"
+                            formControlName="tags"
+                            optionLabel="name" placeholder="Select tags"/>
+            @if (isInvalidAndTouched('tags')) {
+              @if (tags?.hasError('required')) {
+                <p-message severity="error" size="small" variant="simple">At least one tag is required</p-message>
+              } @else if (tags?.hasError('maxlength')) {
+                <p-message severity="error" size="small" variant="simple">You can select up to 5 tags</p-message>
+              }
             }
           </div>
-        }
+
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium text-gray-700" for="description">
+              Or add a custom tag
+            </label>
+            <input (keydown.enter)="addCustomTag()" [formControl]="customTagInput"
+                   [invalid]="customTagInput.invalid && customTagInput.touched"
+                   class="w-full" pInputText placeholder="Enter custom tag"
+                   type="text"/>
+            @if (customTagInput.invalid && customTagInput.touched) {
+              @if (customTagInput.hasError('maxlength')) {
+                <p-message severity="error" size="small" variant="simple">Custom tag must be less than 30 characters
+                </p-message>
+              }
+            }
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="w-full lg:w-1/2 flex flex-col gap-6">
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <app-form-input
-          [control]="date!"
-          [type]="'datetime-local'"
-          [label]="'Date & Time'"
-          [id]="'date'"
-        >
+    <div class="w-full lg:w-1/2 flex flex-col gap-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="date">
+          Date & Time
+          <span class="text-red-500">*</span>
+        </label>
+        <p-datepicker [invalid]="isInvalidAndTouched('date')" [showTime]="true" fluid formControlName="date"
+                      hourFormat="24" inputId="date" placeholder="Select event date and time"></p-datepicker>
+        @if (isInvalidAndTouched('date')) {
           @if (date?.hasError('required')) {
-            <span error-message>Date and time is required</span>
+            <p-message severity="error" size="small" variant="simple">Date & Time is required
+            </p-message>
           }
-        </app-form-input>
+        }
       </div>
 
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <div class="flex flex-col gap-4">
-          <app-form-input
-            [control]="location!"
-            [label]="'Location'"
-            [id]="'location'"
-            [placeholder]="'Event location'"
-          >
-            @if (location?.hasError('required')) {
-              <span error-message>Location is required</span>
-            } @else if (location?.hasError('maxlength')) {
-              <span error-message>Location must be less than 200 characters</span>
-            }
-          </app-form-input>
-
-          <app-form-input
-            [control]="capacity!"
-            [type]="'number'"
-            [label]="'Capacity (optional)'"
-            [id]="'capacity'"
-            [placeholder]="'Maximum attendees'"
-          >
-            @if (capacity?.hasError('min')) {
-              <span error-message>Capacity must be at least 1</span>
-            }
-          </app-form-input>
-        </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="date">
+          Location
+          <span class="text-red-500">*</span>
+        </label>
+        <input [invalid]="isInvalidAndTouched('location')" fluid
+               formControlName="location"
+               id="location"
+               pInputText placeholder="Enter event location"
+               type="text"/>
+        @if (isInvalidAndTouched('location')) {
+          @if (location?.hasError('required')) {
+            <p-message severity="error" size="small" variant="simple">Location is required</p-message>
+          } @else if (location?.hasError('maxlength')) {
+            <p-message severity="error" size="small" variant="simple">Location must be less than 200 characters
+            </p-message>
+          }
+        }
       </div>
 
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="date">
+          Capacity (optional)
+        </label>
+        <p-input-number [invalid]="isInvalidAndTouched('capacity')" formControlName="capacity" inputId="integeronly"
+                        placeholder="Enter event maximum attendees"/>
+        @if (isInvalidAndTouched('capacity')) {
+          @if (capacity?.hasError('min')) {
+            <p-message severity="error" size="small" variant="simple">Capacity must be at least 1
+            </p-message>
+          }
+        }
+      </div>
+
+      <div>
         <h3 class="text-lg font-medium text-gray-800 mb-4">Visibility</h3>
         <div class="space-y-3">
-          <label class="flex items-center space-x-3 cursor-pointer group">
-            <input
-              type="radio"
-              formControlName="visibility"
-              value="public"
-              class="w-4 h-4 text-indigo-600 border-gray-300"
-            />
+          <div class="flex items-center gap-3">
+            <p-radio-button formControlName="visibility" inputId="visibility-public" name="visibility" value="public"/>
             <div class="flex flex-col">
                   <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"
                   >Public</span
                   >
               <span class="text-xs text-gray-500">Anyone can see and join this event</span>
             </div>
-          </label>
+          </div>
 
-          <label class="flex items-center space-x-3 cursor-pointer group">
-            <input
-              type="radio"
-              formControlName="visibility"
-              value="private"
-              class="w-4 h-4 text-indigo-600 border-gray-300"
-            />
+          <div class="flex items-center gap-3">
+            <p-radio-button formControlName="visibility" inputId="visibility-private" name="visibility"
+                            value="private"/>
             <div class="flex flex-col">
                   <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"
                   >Private</span
                   >
               <span class="text-xs text-gray-500">Only invited people can see this event</span>
             </div>
-          </label>
+          </div>
         </div>
       </div>
     </div>
   </form>
 
   <div class="mt-8 flex justify-center">
-    <button
-      type="submit"
-      form="eventCreationForm"
-      [disabled]="formGroup.invalid"
-      class="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer text-white font-medium py-3 px-8 rounded-md transition-all duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 w-full md:w-auto md:min-w-[200px]"
-    >
-      {{ submitButtonText }}
-    </button>
+    <p-button (click)="onSubmit()" [disabled]="formGroup.invalid" [label]="submitButtonText" class="py-3 px-8"/>
   </div>
 </div>

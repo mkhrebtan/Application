@@ -5,6 +5,8 @@ import { EventForm } from '../event-form/event-form';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IEventDetails } from '../models/event-details';
+import { IEventTag } from '../models/event-tag';
+import { UUID } from 'node:crypto';
 
 export interface IEventUpdateData {
   title: string | null;
@@ -14,8 +16,9 @@ export interface IEventUpdateData {
   capacity: {
     isSpecified: boolean;
     value: number | null;
-  }
+  };
   isPublic: boolean | null;
+  tagIds: UUID[];
 }
 
 @Component({
@@ -28,6 +31,7 @@ export class EditEventDialog implements OnInit {
   @Output() closeDialog = new EventEmitter<void>();
   @Output() submitEvent = new EventEmitter<IEventUpdateData>();
   @Input() event!: IEventDetails;
+  @Input() tagsOptions: IEventTag[] = [];
   protected readonly faXmark = faXmark;
   private readonly formBuilder = inject(FormBuilder);
   protected readonly eventCreationForm = this.formBuilder.group({
@@ -37,6 +41,7 @@ export class EditEventDialog implements OnInit {
     location: ['', [Validators.required, Validators.maxLength(200)]],
     capacity: new FormControl<number | undefined>(undefined, [Validators.min(1)]),
     visibility: ['public', [Validators.required]],
+    tags: new FormControl<IEventTag[]>([], [Validators.required, Validators.maxLength(5)]),
   });
 
   ngOnInit() {
@@ -50,6 +55,7 @@ export class EditEventDialog implements OnInit {
         location: this.event.location,
         capacity: this.event.capacity,
         visibility: this.event.isPublic ? 'public' : 'private',
+        tags: this.event.tags,
       });
     }
   }
@@ -61,15 +67,20 @@ export class EditEventDialog implements OnInit {
 
       const updateData: IEventUpdateData = {
         title: formData.title! === this.event.title ? null : formData.title!,
-        description: formData.description! === this.event.description ? null : formData.description!,
+        description:
+          formData.description! === this.event.description ? null : formData.description!,
         date: formData.date! === this.event.date ? null : formData.date!,
         location: formData.location! === this.event.location ? null : formData.location!,
         capacity: {
           isSpecified: formData.capacity !== this.event.capacity,
           value: formData.capacity !== this.event.capacity ? formData.capacity! : null,
         },
-        isPublic: (formData.visibility! === 'public') === this.event.isPublic ? null : (formData.visibility! === 'public'),
-      }
+        isPublic:
+          (formData.visibility! === 'public') === this.event.isPublic
+            ? null
+            : formData.visibility! === 'public',
+        tagIds: formData.tags!.filter((tag) => tag.id !== '1-1-1-1-1').map((tag) => tag.id),
+      };
 
       this.submitEvent.emit(updateData);
       this.onClose();

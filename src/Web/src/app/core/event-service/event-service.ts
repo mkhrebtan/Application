@@ -9,12 +9,15 @@ import { IEventDetails } from '../../features/event/models/event-details';
 import { IEventParticipant } from '../../features/event/models/event-participant';
 import { IUserEvent } from '../../features/event/models/user-event';
 import { IEvent } from '../../features/event/models/event';
+import { IEventUpdateData } from '../../features/event/edit-event-dialog/edit-event-dialog';
+import { IEventTag } from '../../features/event/models/event-tag';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  private eventsUrl = 'https://localhost:5001/events';
+  private apiUrl: string = 'https://localhost:5001';
+  private eventsUrl = `${this.apiUrl}/events`;
 
   private http = inject(HttpClient);
   private authService = inject(AuthService);
@@ -63,26 +66,19 @@ export class EventService {
       .pipe(map((response) => response.events));
   }
 
+  getTags() {
+    return this.http
+      .get<{ tags: IEventTag[] }>(`${this.apiUrl}/tags`)
+      .pipe(map((response) => response.tags));
+  }
+
   createEvent(eventData: IEvent) {
     return this.http
       .post<{ eventId: UUID }>(this.eventsUrl, eventData)
       .pipe(map((response) => response.eventId));
   }
 
-  updateEvent(
-    eventId: UUID,
-    eventData: {
-      title: string | null;
-      description: string | null;
-      date: string | null;
-      location: string | null;
-      capacity: {
-        isSpecified: boolean;
-        value: number | null;
-      };
-      isPublic: boolean | null;
-    },
-  ) {
+  updateEvent(eventId: UUID, eventData: IEventUpdateData) {
     const requestBody: any = {
       title: eventData.title,
       description: eventData.description,
@@ -92,7 +88,8 @@ export class EventService {
       capacity: {
         isSpecified: eventData.capacity.isSpecified,
         value: eventData.capacity.value,
-      }
+      },
+      tagIds: eventData.tagIds,
     };
 
     return this.http.patch(`${this.eventsUrl}/${eventId}`, requestBody);

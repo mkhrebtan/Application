@@ -10,10 +10,11 @@ import { EventState } from '../models/event-state';
 import { IJoinEventData, JoinEventDialog } from '../join-event-dialog/join-event-dialog';
 import { AuthService } from '../../../core/auth/auth-service/auth-service';
 import { EventService } from '../../../core/event-service/event-service';
+import { Chip } from 'primeng/chip';
 
 @Component({
   selector: 'app-event-listing-card',
-  imports: [DatePipe, FaIconComponent, JoinEventDialog],
+  imports: [DatePipe, FaIconComponent, JoinEventDialog, Chip],
   templateUrl: './event-listing-card.html',
   styles: ``,
 })

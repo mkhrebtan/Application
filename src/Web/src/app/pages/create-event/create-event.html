@@ -1,5 +1,13 @@
 ﻿<div class="pt-8 pb-8 flex flex-col gap-10">
-  <app-hero-section [title]="heroTitle" [description]="heroDescription" />
+  <app-hero-section [description]="heroDescription" [title]="heroTitle"/>
 
-  <app-event-form [formGroup]="eventCreationForm" (formSubmit)="onSubmit()" [submitButtonText]="'Create Event'" />
+  @let tags = tags$ | async;
+  @if (tags) {
+    <app-event-form (formSubmit)="onSubmit()" [formGroup]="eventCreationForm" [submitButtonText]="'Create Event'"
+                    [tagsOptions]="tags"/>
+  } @else {
+    <div class="flex justify-center items center">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </div>
+  }
 </div>

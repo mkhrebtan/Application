@@ -11,20 +11,16 @@
   <div>
     <div class="md:hidden flex gap-2 items-center">
       @for (tag of event.tags; track tag.id) {
-        <div class="bg-indigo-300 py-1 px-3 rounded-sm text-indigo-800 text-xs md:text-sm font-medium">
-          <span>{{ tag.name }}</span>
-        </div>
+        <p-chip [label]="tag.name" class="!py-0 !pl-0 !pr-4"/>
       }
     </div>
-    <div class="hidden md:flex gap-2 items-center">
-      @for (tag of event.tags.slice(0, 3); track tag.id) {
-        <div class="bg-indigo-300 py-1 px-3 rounded-sm text-indigo-800 text-xs md:text-sm font-medium">
-          <span>{{ tag.name }}</span>
-        </div>
+    <div class="hidden md:flex gap-2 items-center flex-wrap">
+      @for (tag of event.tags.slice(0, 2); track tag.id) {
+        <p-chip [label]="tag.name" class="!py-1"/>
       }
 
-      @if (event.tags.length > 3) {
-        <span class="text-indigo-800 text-xs md:text-sm font-medium">+{{ event.tags.length - 3 }}</span>
+      @if (event.tags.length > 2) {
+        <span class="text-gray-800 text-xs font-medium">+{{ event.tags.length - 2 }}</span>
       }
     </div>
   </div>
@@ -79,6 +75,7 @@
         Full
       </button>
     } @else {
+      <!--      <p-button (click)="joinEvent($event)" class="!py-1" fluid label="Join Event"/>-->
       <button
         (click)="joinEvent($event)"
         class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-green-600 hover:bg-green-500"

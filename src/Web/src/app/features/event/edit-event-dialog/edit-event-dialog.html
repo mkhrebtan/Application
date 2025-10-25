@@ -1,4 +1,4 @@
-﻿<app-backdrop (backdropClick)="onClose()" />
+﻿<app-backdrop (backdropClick)="onClose()"/>
 <div class="fixed max-w-7xl mx-auto w-11/12 z-30 top-1/2 left-0 right-0 -translate-y-1/2 p-4 lg:p-8 bg-white rounded-lg shadow-lg animate-slide-in
             flex flex-col gap-4 overflow-y-auto max-h-[90vh] lg:max-h-none
             [&::-webkit-scrollbar]:w-2
@@ -10,12 +10,13 @@
           [&::-webkit-scrollbar-thumb]:bg-gray-700">
   <div class="flex justify-between">
     <h2 class="text-2xl font-semibold">Edit Event</h2>
-    <fa-icon [icon]="faXmark" (click)="onClose()" class="cursor-pointer text-xl" />
+    <fa-icon (click)="onClose()" [icon]="faXmark" class="cursor-pointer text-xl"/>
   </div>
   <app-event-form
-    [formGroup]="eventCreationForm"
     (formSubmit)="onSubmit()"
+    [formGroup]="eventCreationForm"
     [submitButtonText]="'Save Changes'"
+    [tagsOptions]="tagsOptions"
   />
 </div>
 

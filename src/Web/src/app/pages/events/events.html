@@ -55,8 +55,8 @@
            [class.max-w-5xl]="viewMode() === EventListingView.List"
            [class.md:grid-cols-2]="viewMode() === EventListingView.Grid"
            [class.self-center]="viewMode() === EventListingView.List"
-           [class]="{ 'min-w-2/3': viewMode() === EventListingView.List }"
-           class="gap-6">
+           [class]="{ 'md:min-w-3/4': viewMode() === EventListingView.List }"
+           class="gap-6 w-full">
     @let eventsPagedList = events$ | async;
     @if (eventsPagedList) {
       @for (event of eventsPagedList.items; track event.id) {
@@ -67,8 +67,8 @@
         <p class="text-center col-span-4">No events found.</p>
       }
     } @else {
-      <div class="col-span-4 flex justify-center items-center">
-        <fa-icon [icon]="faSpinner" class="animate-spin text-gray-400 text-3xl"/>
+      <div class="flex justify-center items-center col-span-4">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
       </div>
     }
   </section>
