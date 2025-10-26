@@ -18,11 +18,17 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
         string? searchTerm,
         bool? today,
         bool? weekend,
+        Guid[]? tagIds,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
         var query = dbContext.Events.Where(e => e.Date >= DateTime.Today.ToUniversalTime() && e.IsPublic).AsQueryable();
+
+        if (tagIds is { Length: > 0, })
+        {
+            query = query.Where(e => e.EventTags.Any(et => tagIds.Contains(et.TagId)));
+        }
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {

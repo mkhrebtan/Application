@@ -169,12 +169,13 @@ app.MapGet("/events", async (
         string? searchTerm,
         bool? today,
         bool? weekend,
+        Guid[]? tagIds,
         int pageNumber,
         int pageSize,
         IQueryHandler<GetEventsListQuery, EventsListQueryResponse> handler,
         CancellationToken cancellationToken) =>
     {
-        var request = new GetEventsListQuery(visitorId, searchTerm, today, weekend, pageNumber, pageSize);
+        var request = new GetEventsListQuery(visitorId, searchTerm, today, weekend, tagIds, pageNumber, pageSize);
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })

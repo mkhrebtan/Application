@@ -14,6 +14,7 @@ public interface IEventsReadService
         string? searchTerm,
         bool? today,
         bool? weekend,
+        Guid[]? tagIds,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default);

@@ -26,10 +26,17 @@ export class EventService {
     searchTerm: string | null;
     today: boolean | null;
     weekend: boolean | null;
+    tagIds: UUID[] | null;
     page: number;
     pageSize: number;
   }) {
     let queryParams = new HttpParams();
+    if (params.tagIds && params.tagIds.length > 0) {
+      params.tagIds.forEach((tagId) => {
+        queryParams = queryParams.append('tagIds', tagId);
+      });
+    }
+
     if (params.searchTerm) {
       queryParams = queryParams.append('searchTerm', params.searchTerm);
     }
