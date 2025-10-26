@@ -90,27 +90,6 @@ export class AuthService {
       );
   }
 
-  refreshToken(): Observable<RefreshTokenResponse> {
-    const refreshToken = this.tokenService.getRefreshToken();
-    if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
-    }
-
-    return this.http
-      .post<RefreshTokenResponse>(`${this.authUrl}/refresh-token`, {
-        refreshToken,
-      })
-      .pipe(
-        tap((response) => {
-          this.tokenService.setTokens(response.accessToken, response.refreshToken);
-        }),
-        catchError((err) => {
-          this.logout();
-          return throwError(() => err);
-        }),
-      );
-  }
-
   logout(): void {
     this.tokenService.clearTokens();
     this.currentUserSubject.next(null);
@@ -141,11 +120,44 @@ export class AuthService {
     this.http.get<User>(`${this.userUrl}/me`).subscribe({
       next: (user) => {
         this.currentUserSubject.next(user);
+        this.isAuthenticatedSubject.next(true);
       },
       error: (err) => {
-        console.error('Failed to load current user:', err);
-        this.currentUserSubject.next(null);
+        this.refreshToken().subscribe({
+          next: () => {
+            this.http.get<User>(`${this.userUrl}/me`).subscribe({
+              next: (user) => {
+                this.currentUserSubject.next(user);
+                this.isAuthenticatedSubject.next(true);
+              },
+              error: () => {
+                this.logout();
+              },
+            });
+          },
+        });
       },
-    })
+    });
+  }
+
+  private refreshToken(): Observable<RefreshTokenResponse> {
+    const refreshToken = this.tokenService.getRefreshToken();
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+
+    return this.http
+      .post<RefreshTokenResponse>(`${this.authUrl}/refresh-token`, {
+        refreshToken,
+      })
+      .pipe(
+        tap((response) => {
+          this.tokenService.setTokens(response.accessToken, response.refreshToken);
+        }),
+        catchError((err) => {
+          this.logout();
+          return throwError(() => err);
+        }),
+      );
   }
 }
