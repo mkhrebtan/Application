@@ -9,8 +9,8 @@ import { IEventDetails } from '../../features/event/models/event-details';
 import { IEventParticipant } from '../../features/event/models/event-participant';
 import { IUserEvent } from '../../features/event/models/user-event';
 import { IEvent } from '../../features/event/models/event';
-import { IEventUpdateData } from '../../features/event/edit-event-dialog/edit-event-dialog';
 import { IEventTag } from '../../features/event/models/event-tag';
+import { IEventUpdateData } from '../../features/event/models/event-update-data';
 
 @Injectable({
   providedIn: 'root',

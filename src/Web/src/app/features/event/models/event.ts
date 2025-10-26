@@ -8,4 +8,5 @@ export interface IEvent {
   capacity?: number;
   isPublic: boolean;
   tagIds: UUID[];
+  userTagNames: string[];
 }

@@ -24,7 +24,7 @@ export class CreateEvent {
   protected readonly eventCreationForm = this.formBuilder.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
     description: ['', [Validators.maxLength(500)]],
-    date: ['', [Validators.required]],
+    date: new FormControl<Date | null>(null, [Validators.required]),
     location: ['', [Validators.required, Validators.maxLength(200)]],
     capacity: [null, [Validators.min(1)]],
     visibility: ['public', [Validators.required]],
@@ -40,18 +40,21 @@ export class CreateEvent {
   onSubmit() {
     if (this.eventCreationForm.valid) {
       const formData = this.eventCreationForm.value;
-      formData.date = new Date(formData.date!).toISOString();
 
       const tagIds = formData.tags!.filter((tag) => tag.id !== '1-1-1-1-1').map((tag) => tag.id);
+      const userTagNames = formData
+        .tags!.filter((tag) => tag.id === '1-1-1-1-1')
+        .map((tag) => tag.name);
 
       const newEvent: IEvent = {
         title: formData.title!,
         description: formData.description!,
-        date: new Date(formData.date!),
+        date: new Date(formData.date!.toISOString()),
         location: formData.location!,
         capacity: formData.capacity || undefined,
         isPublic: formData.visibility === 'public',
         tagIds: tagIds,
+        userTagNames: userTagNames,
       };
 
       this.eventService.createEvent(newEvent).subscribe({

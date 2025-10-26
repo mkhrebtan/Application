@@ -6,20 +6,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IEventDetails } from '../models/event-details';
 import { IEventTag } from '../models/event-tag';
-import { UUID } from 'node:crypto';
-
-export interface IEventUpdateData {
-  title: string | null;
-  description: string | null;
-  date: string | null;
-  location: string | null;
-  capacity: {
-    isSpecified: boolean;
-    value: number | null;
-  };
-  isPublic: boolean | null;
-  tagIds: UUID[];
-}
+import { IEventUpdateData } from '../models/event-update-data';
 
 @Component({
   selector: 'app-edit-event-dialog',
@@ -36,8 +23,8 @@ export class EditEventDialog implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   protected readonly eventCreationForm = this.formBuilder.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
-    description: ['', [Validators.required, Validators.maxLength(500)]],
-    date: ['', [Validators.required]],
+    description: ['', [Validators.maxLength(500)]],
+    date: new FormControl<Date | null>(null, [Validators.required]),
     location: ['', [Validators.required, Validators.maxLength(200)]],
     capacity: new FormControl<number | undefined>(undefined, [Validators.min(1)]),
     visibility: ['public', [Validators.required]],
@@ -51,7 +38,7 @@ export class EditEventDialog implements OnInit {
       this.eventCreationForm.patchValue({
         title: this.event.title,
         description: this.event.description,
-        date: localDate.toISOString().slice(0, 16),
+        date: eventDate,
         location: this.event.location,
         capacity: this.event.capacity,
         visibility: this.event.isPublic ? 'public' : 'private',
@@ -63,13 +50,13 @@ export class EditEventDialog implements OnInit {
   onSubmit() {
     if (this.eventCreationForm.valid) {
       const formData = this.eventCreationForm.value;
-      formData.date = new Date(formData.date!).toISOString();
 
       const updateData: IEventUpdateData = {
         title: formData.title! === this.event.title ? null : formData.title!,
         description:
           formData.description! === this.event.description ? null : formData.description!,
-        date: formData.date! === this.event.date ? null : formData.date!,
+        date:
+          formData.date!.toISOString() === this.event.date ? null : formData.date!.toISOString(),
         location: formData.location! === this.event.location ? null : formData.location!,
         capacity: {
           isSpecified: formData.capacity !== this.event.capacity,
@@ -80,6 +67,7 @@ export class EditEventDialog implements OnInit {
             ? null
             : formData.visibility! === 'public',
         tagIds: formData.tags!.filter((tag) => tag.id !== '1-1-1-1-1').map((tag) => tag.id),
+        userTagNames: formData.tags!.filter((tag) => tag.id === '1-1-1-1-1').map((tag) => tag.name),
       };
 
       this.submitEvent.emit(updateData);

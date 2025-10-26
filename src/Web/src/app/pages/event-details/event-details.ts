@@ -7,10 +7,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { faInfinity, faLocationDot, faSpinner, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { EventState } from '../../features/event/models/event-state';
-import {
-  EditEventDialog,
-  IEventUpdateData,
-} from '../../features/event/edit-event-dialog/edit-event-dialog';
+import { EditEventDialog } from '../../features/event/edit-event-dialog/edit-event-dialog';
 import { UUID } from 'node:crypto';
 import { Observable, Subject } from 'rxjs';
 import { IEventDetails } from '../../features/event/models/event-details';
@@ -23,6 +20,7 @@ import { AuthService } from '../../core/auth/auth-service/auth-service';
 import { IEventParticipant } from '../../features/event/models/event-participant';
 import { IEventTag } from '../../features/event/models/event-tag';
 import { Chip } from 'primeng/chip';
+import { IEventUpdateData } from '../../features/event/models/event-update-data';
 
 @Component({
   selector: 'app-event-details',
