@@ -35,6 +35,30 @@ internal sealed class CreateEventCommandHandler(
                 "One or more provided tag IDs do not exist."));
         }
 
+        var allTagIds = new List<Guid>(request.TagIds);
+
+        if (request.UserTagNames?.Length > 0)
+        {
+            var existingTags =
+                await tagRepository.GetTagsByNamesAsync(
+                    request.UserTagNames.Select(Tag.NormalizeName),
+                    cancellationToken);
+            var existingTagNames = existingTags.Select(t => t.NormalizedName).ToHashSet();
+
+            allTagIds.AddRange(existingTags.Select(t => t.Id));
+
+            var newTags = request.UserTagNames
+                .Where(name => !existingTagNames.Contains(Tag.NormalizeName(name)))
+                .Distinct()
+                .Select(tagName => new Tag(tagName));
+
+            foreach (var newTag in newTags)
+            {
+                tagRepository.Add(newTag);
+                allTagIds.Add(newTag.Id);
+            }
+        }
+
         var newEventResult = Event.Create(
             userId.Value,
             request.Title,
@@ -49,7 +73,7 @@ internal sealed class CreateEventCommandHandler(
         }
 
         eventRepository.Add(newEventResult.Value);
-        eventTagRepository.AddRange(request.TagIds.Select(tagId =>
+        eventTagRepository.AddRange(allTagIds.Select(tagId =>
             new EventTag(tagId: tagId, eventId: newEventResult.Value.Id)));
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

@@ -11,4 +11,12 @@ public class TagRepository(ApplicationDbContext context) : GenericRepository<Tag
         return await _dbSet.Where(tag => tagIds.Contains(tag.Id))
             .CountAsync(cancellationToken) == tagIds.Count;
     }
+
+    public async Task<List<Tag>> GetTagsByNamesAsync(
+        IEnumerable<string> normalizedTagNames,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.Where(tag => normalizedTagNames.Contains(tag.NormalizedName))
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -9,5 +9,6 @@ public record CreateEventCommand(
     string Location,
     int? Capacity,
     bool IsPublic,
-    Guid[] TagIds)
+    Guid[] TagIds,
+    string[] UserTagNames)
     : ICommand<CreateEventCommandResponse>;

@@ -11,7 +11,8 @@ internal sealed class UpdateEventCommandHandler(
     IEventRepository eventRepository,
     IUnitOfWork unitOfWork,
     IUserContext userContext,
-    IEventTagRepository eventTagRepository)
+    IEventTagRepository eventTagRepository,
+    ITagRepository tagRepository)
     : ICommandHandler<UpdateEventCommand>
 {
     public async Task<Result> Handle(UpdateEventCommand request, CancellationToken cancellationToken = default)
@@ -57,8 +58,32 @@ internal sealed class UpdateEventCommandHandler(
 
         eventRepository.Update(existingEvent);
 
+        var allTagIds = new List<Guid>(request.TagIds);
+
+        if (request.UserTagNames?.Length > 0)
+        {
+            var existingTags =
+                await tagRepository.GetTagsByNamesAsync(
+                    request.UserTagNames.Select(Tag.NormalizeName),
+                    cancellationToken);
+            var existingTagNames = existingTags.Select(t => t.NormalizedName).ToHashSet();
+
+            allTagIds.AddRange(existingTags.Select(t => t.Id));
+
+            var newTags = request.UserTagNames
+                .Where(name => !existingTagNames.Contains(Tag.NormalizeName(name)))
+                .Distinct()
+                .Select(tagName => new Tag(tagName));
+
+            foreach (var newTag in newTags)
+            {
+                tagRepository.Add(newTag);
+                allTagIds.Add(newTag.Id);
+            }
+        }
+
         var currentTagIds = existingEvent.EventTags.Select(et => et.TagId).ToHashSet();
-        var newTagIds = request.TagIds.ToHashSet();
+        var newTagIds = allTagIds.ToHashSet();
 
         foreach (var tagId in newTagIds.Except(currentTagIds))
         {

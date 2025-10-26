@@ -13,5 +13,7 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.HasMany<EventTag>()
             .WithOne(et => et.Tag)
             .HasForeignKey(et => et.TagId);
+        builder.Property(x => x.NormalizedName).IsRequired().HasMaxLength(50);
+        builder.HasIndex(x => x.NormalizedName).IsUnique();
     }
 }

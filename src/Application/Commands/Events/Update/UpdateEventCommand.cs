@@ -12,4 +12,5 @@ public record UpdateEventCommand(
     string? Location,
     OptionalUpdate<int?> Capacity,
     bool? IsPublic,
-    Guid[] TagIds) : ICommand;
+    Guid[] TagIds,
+    string[] UserTagNames) : ICommand;
