@@ -3,12 +3,19 @@ import { Events } from './pages/events/events';
 import { NotFound } from './pages/not-found/not-found';
 import { Main } from './layout/main/main';
 import { authGuard } from './core/auth/auth-guard/auth-guard';
+import { Assistant } from './pages/assistant/assistant';
 
 export const routes: Routes = [
   {
     path: '',
     component: Main,
     children: [
+      {
+        path: 'assistant',
+        loadComponent: () => import('./pages/assistant/assistant').then((m) => m.Assistant),
+        title: 'Assistant',
+        canActivate: [authGuard],
+      },
       {
         path: 'events',
         component: Events,

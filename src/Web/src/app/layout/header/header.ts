@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { faArrowRightFromBracket, faListUl, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowRightFromBracket,
+  faListUl,
+  faMicrochip,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import { faCalendar, faUser } from '@fortawesome/free-regular-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -17,6 +22,7 @@ export class Header {
   protected readonly faPlus = faPlus;
   protected readonly faCalendar = faCalendar;
   protected readonly faArrowRightFromBracket = faArrowRightFromBracket;
+  protected readonly faMicrochip = faMicrochip;
   protected readonly faUser = faUser;
   protected authService = inject(AuthService);
   private router = inject(Router);

@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IEventListingModel } from '../../features/event/models/event-listing-model';
-import { AuthService } from '../auth/auth-service/auth-service';
 import { IPagedList } from '../../shared/models/paged-list';
 import { map } from 'rxjs';
 import { UUID } from 'node:crypto';
@@ -20,7 +19,6 @@ export class EventService {
   private eventsUrl = `${this.apiUrl}/events`;
 
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
 
   getEventsList(params: {
     searchTerm: string | null;
