@@ -1,6 +1,7 @@
 using API.Extensions;
 using Api.Middlewares.Exceptions;
 using Application;
+using Application.Commands.AI.GenerateResponse;
 using Application.Commands.EventParticipants.Join;
 using Application.Commands.EventParticipants.Leave;
 using Application.Commands.Events.Create;
@@ -10,7 +11,6 @@ using Application.Commands.Users.Login;
 using Application.Commands.Users.RefreshToken;
 using Application.Commands.Users.Signup;
 using Application.Mediator;
-using Application.Queries.AI;
 using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
@@ -155,11 +155,10 @@ app.MapPost("/events/{id:guid}/join", async (
 app.MapPost("/events/{id:guid}/leave", async (
         Guid id,
         [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
-        LeaveEventCommand request,
         ICommandHandler<LeaveEventCommand> handler,
         CancellationToken cancellationToken) =>
     {
-        request = request with { EventId = id, VisitorId = visitorId, };
+        var request = new LeaveEventCommand(EventId: id, VisitorId: visitorId);
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
     })
@@ -236,8 +235,8 @@ app.MapGet("tags", async (
     .WithTags("Tags");
 
 app.MapPost("ai/ask", async (
-        GetAiResponseQuery request,
-        IQueryHandler<GetAiResponseQuery, string> handler,
+        GenerateAiResponseCommand request,
+        ICommandHandler<GenerateAiResponseCommand, string> handler,
         CancellationToken cancellationToken) =>
     {
         var result = await handler.Handle(request, cancellationToken);

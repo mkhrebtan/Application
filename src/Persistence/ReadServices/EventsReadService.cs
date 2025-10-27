@@ -1,4 +1,5 @@
-﻿using Application.Queries;
+﻿using Application.Assistant;
+using Application.Queries;
 using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
@@ -120,5 +121,25 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                 ep.JoinedAt))
             .ToListAsync(cancellationToken);
         return eventParticipants;
+    }
+
+    public async Task<IEnumerable<PromptEvent>> GetEventsForAssistantAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var events = await dbContext.Events
+            .Select(e => new PromptEvent(
+                e.Id,
+                e.Title,
+                e.Date,
+                e.Location,
+                e.OrganizerId,
+                e.IsPublic,
+                e.EventTags.Select(et => et.Tag.Name),
+                e.EventParticipants.Select(ep => new PromptEventParticipant(
+                    (ep.UserId ?? ep.VisitorId)!.Value,
+                    ep.User == null ? ep.VisitorFirstName : ep.User.FirstName,
+                    ep.User == null ? ep.VisitorLastName : ep.User.LastName))))
+            .ToListAsync(cancellationToken);
+        return events;
     }
 }

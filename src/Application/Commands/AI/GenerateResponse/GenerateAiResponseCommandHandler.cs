@@ -1,18 +1,21 @@
 ﻿using Application.Assistant;
 using Application.Authentication;
 using Application.Mediator;
+using Application.ReadServices;
 using Domain.Repositories;
 using Domain.Shared.ErrorHandling;
 
-namespace Application.Queries.AI;
+namespace Application.Commands.AI.GenerateResponse;
 
-internal sealed class GetAiResponseQueryHandler(
+internal sealed class GenerateAiResponseCommandHandler(
     IAiAssistant aiAssistant,
     IUserContext userContext,
-    IUserRepository userRepository)
-    : IQueryHandler<GetAiResponseQuery, string>
+    IUserRepository userRepository,
+    IEventsReadService eventsReadService)
+    : ICommandHandler<GenerateAiResponseCommand, string>
 {
-    public async Task<Result<string>> Handle(GetAiResponseQuery request, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> Handle(GenerateAiResponseCommand request,
+        CancellationToken cancellationToken = default)
     {
         var userId = userContext.UserId;
         if (userId is null || userId == Guid.Empty)
@@ -30,13 +33,15 @@ internal sealed class GetAiResponseQueryHandler(
                 "Authenticated user not found in the system."));
         }
 
+        var promptEvents = await eventsReadService.GetEventsForAssistantAsync(cancellationToken);
         var promptData = new Prompt(
             new PromptContextData(
                 DateTime.UtcNow,
                 userId.Value,
                 user.FirstName,
-                []),
-            request.Query);
+                user.LastName,
+                promptEvents),
+            request.Prompt);
 
         var response = await aiAssistant.GetResponseAsync(promptData, cancellationToken);
         return Result<string>.Success(response);

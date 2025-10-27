@@ -1,4 +1,5 @@
-﻿using Application.Queries;
+﻿using Application.Assistant;
+using Application.Queries;
 using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
@@ -30,4 +31,6 @@ public interface IEventsReadService
     Task<List<EventParticipantDto>> GetEventParticipantsAsync(
         Guid eventId,
         CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<PromptEvent>> GetEventsForAssistantAsync(CancellationToken cancellationToken = default);
 }

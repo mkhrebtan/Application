@@ -6,5 +6,6 @@ public record PromptEvent(
     DateTime Date,
     string Location,
     Guid OrganizerId,
+    bool IsPublic,
     IEnumerable<string> Tags,
     IEnumerable<PromptEventParticipant> Participants);
