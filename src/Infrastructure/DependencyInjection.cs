@@ -1,4 +1,6 @@
-﻿using Application.Authentication;
+﻿using Application.Assistant;
+using Application.Authentication;
+using Infrastructure.Assistant;
 using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +34,14 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<ITokenProvider, TokenProvider>();
         services.AddScoped<IUserContext, UserContext>();
+
+        services.AddHttpClient("GroqCLient", client =>
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {configuration["GROQ_API_KEY"]}");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.BaseAddress = new Uri("https://api.groq.com/openai/v1/");
+        });
+        services.AddScoped<IAiAssistant, GroqAssistant>();
 
         return services;
     }

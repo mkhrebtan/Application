@@ -10,6 +10,7 @@ using Application.Commands.Users.Login;
 using Application.Commands.Users.RefreshToken;
 using Application.Commands.Users.Signup;
 using Application.Mediator;
+using Application.Queries.AI;
 using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
@@ -233,5 +234,16 @@ app.MapGet("tags", async (
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
     .WithTags("Tags");
+
+app.MapPost("ai/ask", async (
+        GetAiResponseQuery request,
+        IQueryHandler<GetAiResponseQuery, string> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .RequireAuthorization()
+    .WithTags("AI");
 
 await app.RunAsync();
