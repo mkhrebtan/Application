@@ -40,6 +40,10 @@ export class AiService {
       });
   }
 
+  clearHistory() {
+    this.messagesSubject.next([]);
+  }
+
   private generateResponse(prompt: string) {
     const url = `${this.apiUrl}/ai/ask`;
     return this.http.post<string>(url, { prompt: prompt });

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token-service/token.service';
+import { AiService } from '../../ai-service/ai-service';
 
 export interface User {
   firstName: string;
@@ -28,6 +29,7 @@ export class AuthService {
   private userUrl = 'https://localhost:5001/users';
   private http = inject(HttpClient);
   private tokenService = inject(TokenService);
+  private aiService = inject(AiService);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.hasAccessToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private currentUserSubject = new BehaviorSubject<User | null>(null);
@@ -92,6 +94,7 @@ export class AuthService {
 
   logout(): void {
     this.tokenService.clearTokens();
+    this.aiService.clearHistory();
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }
