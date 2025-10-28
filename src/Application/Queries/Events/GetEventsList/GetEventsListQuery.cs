@@ -7,5 +7,6 @@ public record GetEventsListQuery(
     string? SearchTerm,
     bool? Today,
     bool? Weekend,
+    Guid[]? TagIds,
     int PageNumber,
     int PageSize) : IQuery<EventsListQueryResponse>;

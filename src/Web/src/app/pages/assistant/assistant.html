@@ -1,0 +1,55 @@
+﻿<div class="h-[calc(100vh-150px)] lg:h-[calc(100vh-120px)] flex justify-center">
+  <div class="flex flex-col h-full w-full md:w-2/3">
+    <p-scroll-panel class="h-full overflow-hidden pt-4 pr-4">
+      @let messages = aiService.messages$ | async;
+      @let loading = aiService.loading$ | async;
+      @if (messages) {
+        @for (message of messages; track message) {
+          <div
+            [ngClass]="{
+                  'justify-end': message.isUser,
+                  'justify-start': !message.isUser,
+                }"
+            class="flex mb-4"
+          >
+            <div
+              [ngClass]="{
+                    'bg-indigo-500 text-white': message.isUser,
+                    'bg-gray-200 text-gray-800': !message.isUser,
+                  }"
+              class="rounded-lg px-4 py-2 max-w-md animate-slide-in"
+            >
+              <pre class="font-sans text-wrap">{{ message.text }}</pre>
+            </div>
+          </div>
+        }
+        @if (loading) {
+          <div class="flex justify-start mb-4">
+            <div class="rounded-lg px-4 py-2 max-w-md bg-gray-200 text-gray-800">
+              <i class="pi pi-spin pi-spinner"></i>
+            </div>
+          </div>
+        }
+      }
+    </p-scroll-panel>
+    <div class="shadow-md">
+      <p-input-group>
+        <input
+          (keydown.enter)="processQuery()"
+          [formControl]="userQuery"
+          class="px-4"
+          pInputText
+          placeholder="Enter your question..."
+          type="text"
+        />
+        <p-button
+          (click)="processQuery()"
+          [disabled]="!userQuery.value || (aiService.loading$ | async)"
+          icon="pi pi-send"
+          iconPos="right"
+          size="large"
+        />
+      </p-input-group>
+    </div>
+  </div>
+</div>

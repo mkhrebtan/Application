@@ -1,4 +1,6 @@
-﻿namespace Application.Queries.Events.GetEventsList;
+﻿using Application.Queries.Tags.GetTags;
+
+namespace Application.Queries.Events.GetEventsList;
 
 public record EventListingDto(
     Guid Id,
@@ -8,4 +10,5 @@ public record EventListingDto(
     string Location,
     int? Capacity,
     int ParticipantsCount,
-    RequesterStatusDto RequesterStatus);
+    RequesterStatusDto RequesterStatus,
+    IEnumerable<TagDto> Tags);

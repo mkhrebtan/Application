@@ -28,6 +28,7 @@ internal sealed class EventsListQueryHandler(IEventsReadService eventsReadServic
             query.SearchTerm,
             query.Today,
             query.Weekend,
+            query.TagIds,
             query.PageNumber,
             query.PageSize,
             cancellationToken);

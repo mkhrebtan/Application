@@ -21,9 +21,12 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEventParticipantRepository, EventParticipantRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IEventTagRepository, EventTagRepository>();
 
         services.AddTransient(typeof(IPagedList<>), typeof(PagedList<>));
         services.AddScoped<IEventsReadService, EventsReadService>();
+        services.AddScoped<ITagsReadService, TagReadService>();
 
         return services;
     }

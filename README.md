@@ -34,6 +34,7 @@ This is a full-stack application for managing events, built with an Angular fron
 -   **Event Participation**: Users can join and leave events.
 -   **Paged Lists**: Efficiently browse through large lists of events and users.
 -   **Validation**: Robust input validation for all incoming requests.
+-   **AI Assistant**: Get suggestions and information about events from an AI assistant.
 
 ## Setup and Running the Application
 
@@ -63,6 +64,8 @@ This is a full-stack application for managing events, built with an Angular fron
     JwtSettings__Audience=EventManagementClient
     JwtSettings__AccessTokenExpirationMinutes=60
     JwtSettings__RefreshTokenExpirationDays=7
+
+    GROQ_API_KEY=your_groq_api_key
     ```
 
 3.  **Build and Run with Docker Compose:**
@@ -101,3 +104,8 @@ The `.env` file is used to configure the application services.
 -   `JwtSettings__Audience`: The intended audience of the JWT tokens (your client application).
 -   `JwtSettings__AccessTokenExpirationMinutes`: The lifetime of an access token in minutes.
 -   `JwtSettings__RefreshTokenExpirationDays`: The lifetime of a refresh token in days.
+
+### AI Assistant Configuration (`api` service)
+
+-   `GROQ_API_KEY`: Your API key for the Groq AI service.
+

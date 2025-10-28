@@ -1,27 +1,23 @@
 ﻿using Application.Authentication;
 using Application.Mediator;
 using Domain.Abstraction.Interfaces;
+using Domain.Models;
 using Domain.Repositories;
 using Domain.Shared.ErrorHandling;
 
 namespace Application.Commands.Events.Update;
 
-internal sealed class UpdateEventCommandHandler : ICommandHandler<UpdateEventCommand>
+internal sealed class UpdateEventCommandHandler(
+    IEventRepository eventRepository,
+    IUnitOfWork unitOfWork,
+    IUserContext userContext,
+    IEventTagRepository eventTagRepository,
+    ITagRepository tagRepository)
+    : ICommandHandler<UpdateEventCommand>
 {
-    private readonly IEventRepository _eventRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IUserContext _userContext;
-
-    public UpdateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork, IUserContext userContext)
-    {
-        _eventRepository = eventRepository;
-        _unitOfWork = unitOfWork;
-        _userContext = userContext;
-    }
-
     public async Task<Result> Handle(UpdateEventCommand request, CancellationToken cancellationToken = default)
     {
-        var userId = _userContext.UserId;
+        var userId = userContext.UserId;
         if (userId == null)
         {
             return Result.Failure(Error.Problem(
@@ -29,7 +25,7 @@ internal sealed class UpdateEventCommandHandler : ICommandHandler<UpdateEventCom
                 "User must be authenticated to update an event."));
         }
 
-        var existingEvent = await _eventRepository.GetByIdAsync(request.EventId, cancellationToken);
+        var existingEvent = await eventRepository.GetByIdWithTagsAsync(request.EventId, cancellationToken);
         if (existingEvent is null)
         {
             return Result.Failure(Error.NotFound("Event.NotFound", $"Event with ID {request.EventId} was not found."));
@@ -60,8 +56,46 @@ internal sealed class UpdateEventCommandHandler : ICommandHandler<UpdateEventCom
             }
         }
 
-        _eventRepository.Update(existingEvent);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        eventRepository.Update(existingEvent);
+
+        var allTagIds = new List<Guid>(request.TagIds);
+
+        if (request.UserTagNames?.Length > 0)
+        {
+            var existingTags =
+                await tagRepository.GetTagsByNamesAsync(
+                    request.UserTagNames.Select(Tag.NormalizeName),
+                    cancellationToken);
+            var existingTagNames = existingTags.Select(t => t.NormalizedName).ToHashSet();
+
+            allTagIds.AddRange(existingTags.Select(t => t.Id));
+
+            var newTags = request.UserTagNames
+                .Where(name => !existingTagNames.Contains(Tag.NormalizeName(name)))
+                .Distinct()
+                .Select(tagName => new Tag(tagName));
+
+            foreach (var newTag in newTags)
+            {
+                tagRepository.Add(newTag);
+                allTagIds.Add(newTag.Id);
+            }
+        }
+
+        var currentTagIds = existingEvent.EventTags.Select(et => et.TagId).ToHashSet();
+        var newTagIds = allTagIds.ToHashSet();
+
+        foreach (var tagId in newTagIds.Except(currentTagIds))
+        {
+            eventTagRepository.Add(new EventTag(existingEvent.Id, tagId));
+        }
+
+        foreach (var tag in existingEvent.EventTags.Where(et => !newTagIds.Contains(et.TagId)))
+        {
+            eventTagRepository.Delete(tag);
+        }
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
 }

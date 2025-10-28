@@ -1,8 +1,10 @@
-﻿using Application.Queries;
+﻿using Application.Assistant;
+using Application.Queries;
 using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
+using Application.Queries.Tags.GetTags;
 using Application.ReadServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +19,17 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
         string? searchTerm,
         bool? today,
         bool? weekend,
+        Guid[]? tagIds,
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
         var query = dbContext.Events.Where(e => e.Date >= DateTime.Today.ToUniversalTime() && e.IsPublic).AsQueryable();
+
+        if (tagIds is { Length: > 0, })
+        {
+            query = query.Where(e => e.EventTags.Any(et => tagIds.Contains(et.TagId)));
+        }
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
@@ -55,7 +63,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                 e.EventParticipants.Any(ep =>
                     (userId.HasValue && ep.UserId == userId.Value) ||
                     (visitorId.HasValue && ep.VisitorId == visitorId.Value)),
-                userId.HasValue && e.OrganizerId == userId.Value)));
+                userId.HasValue && e.OrganizerId == userId.Value),
+            e.EventTags.Select(et => new TagDto(et.TagId, et.Tag.Name))));
 
         return await pagedList.Create(eventListingDtos, pageNumber, pageSize);
     }
@@ -80,7 +89,8 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                     (userId.HasValue && ep.UserId == userId.Value) ||
                     (visitorId.HasValue && ep.VisitorId == visitorId.Value)),
                 userId.HasValue && e.OrganizerId == userId.Value,
-                e.IsPublic))
+                e.IsPublic,
+                e.EventTags.Select(et => new TagDto(et.TagId, et.Tag.Name))))
             .FirstOrDefaultAsync(cancellationToken);
         return eventDetailsDto;
     }
@@ -111,5 +121,25 @@ public class EventsReadService(ApplicationDbContext dbContext, IPagedList<EventL
                 ep.JoinedAt))
             .ToListAsync(cancellationToken);
         return eventParticipants;
+    }
+
+    public async Task<IEnumerable<PromptEvent>> GetEventsForAssistantAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var events = await dbContext.Events
+            .Select(e => new PromptEvent(
+                e.Id,
+                e.Title,
+                e.Date,
+                e.Location,
+                e.OrganizerId,
+                e.IsPublic,
+                e.EventTags.Select(et => et.Tag.Name),
+                e.EventParticipants.Select(ep => new PromptEventParticipant(
+                    (ep.UserId ?? ep.VisitorId)!.Value,
+                    ep.User == null ? ep.VisitorFirstName : ep.User.FirstName,
+                    ep.User == null ? ep.VisitorLastName : ep.User.LastName))))
+            .ToListAsync(cancellationToken);
+        return events;
     }
 }

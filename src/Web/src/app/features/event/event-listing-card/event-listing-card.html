@@ -8,14 +8,30 @@
     </h3>
     <p class="leading-normal h-12 line-clamp-2 text-gray-600">{{ event.description }}</p>
   </div>
+  <div>
+    <div class="md:hidden flex gap-2 items-center">
+      @for (tag of event.tags; track tag.id) {
+        <p-chip [label]="tag.name" class="!py-1"/>
+      }
+    </div>
+    <div class="hidden md:flex gap-2 items-center flex-wrap">
+      @for (tag of event.tags.slice(0, 2); track tag.id) {
+        <p-chip [label]="tag.name" class="!py-1"/>
+      }
+
+      @if (event.tags.length > 2) {
+        <span class="text-gray-800 text-xs font-medium">+{{ event.tags.length - 2 }}</span>
+      }
+    </div>
+  </div>
   <div
-    [class.flex-col]="viewMode === EventListingView.Grid"
-    [class.gap-5]="viewMode === EventListingView.Grid"
-    class="flex flex-col "
+    [class.md:flex-row]="viewMode === EventListingView.List"
+    [class.md:gap-2]="viewMode === EventListingView.List"
+    class="flex flex-col gap-5"
   >
     <div
-      [class.flex]="viewMode === EventListingView.List"
-      [class.gap-6]="viewMode === EventListingView.List"
+      [class.md:flex]="viewMode === EventListingView.List"
+      [class.md:gap-6]="viewMode === EventListingView.List"
       class="text-gray-600 flex-1"
     >
       <div class="flex items-center gap-2">
@@ -59,6 +75,7 @@
         Full
       </button>
     } @else {
+      <!--      <p-button (click)="joinEvent($event)" class="!py-1" fluid label="Join Event"/>-->
       <button
         (click)="joinEvent($event)"
         class="rounded-md p-1.5 transition-all duration-300 text-white shadow-md flex-1 cursor-pointer bg-green-600 hover:bg-green-500"

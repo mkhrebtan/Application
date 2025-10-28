@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { IEventListingModel } from '../../features/event/models/event-listing-model';
-import { AuthService } from '../auth/auth-service/auth-service';
 import { IPagedList } from '../../shared/models/paged-list';
 import { map } from 'rxjs';
 import { UUID } from 'node:crypto';
@@ -9,24 +8,33 @@ import { IEventDetails } from '../../features/event/models/event-details';
 import { IEventParticipant } from '../../features/event/models/event-participant';
 import { IUserEvent } from '../../features/event/models/user-event';
 import { IEvent } from '../../features/event/models/event';
+import { IEventTag } from '../../features/event/models/event-tag';
+import { IEventUpdateData } from '../../features/event/models/event-update-data';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  private eventsUrl = 'https://localhost:5001/events';
+  private apiUrl: string = 'https://localhost:5001';
+  private eventsUrl = `${this.apiUrl}/events`;
 
   private http = inject(HttpClient);
-  private authService = inject(AuthService);
 
   getEventsList(params: {
     searchTerm: string | null;
     today: boolean | null;
     weekend: boolean | null;
+    tagIds: UUID[] | null;
     page: number;
     pageSize: number;
   }) {
     let queryParams = new HttpParams();
+    if (params.tagIds && params.tagIds.length > 0) {
+      params.tagIds.forEach((tagId) => {
+        queryParams = queryParams.append('tagIds', tagId);
+      });
+    }
+
     if (params.searchTerm) {
       queryParams = queryParams.append('searchTerm', params.searchTerm);
     }
@@ -63,26 +71,19 @@ export class EventService {
       .pipe(map((response) => response.events));
   }
 
+  getTags() {
+    return this.http
+      .get<{ tags: IEventTag[] }>(`${this.apiUrl}/tags`)
+      .pipe(map((response) => response.tags));
+  }
+
   createEvent(eventData: IEvent) {
     return this.http
       .post<{ eventId: UUID }>(this.eventsUrl, eventData)
       .pipe(map((response) => response.eventId));
   }
 
-  updateEvent(
-    eventId: UUID,
-    eventData: {
-      title: string | null;
-      description: string | null;
-      date: string | null;
-      location: string | null;
-      capacity: {
-        isSpecified: boolean;
-        value: number | null;
-      };
-      isPublic: boolean | null;
-    },
-  ) {
+  updateEvent(eventId: UUID, eventData: IEventUpdateData) {
     const requestBody: any = {
       title: eventData.title,
       description: eventData.description,
@@ -92,7 +93,8 @@ export class EventService {
       capacity: {
         isSpecified: eventData.capacity.isSpecified,
         value: eventData.capacity.value,
-      }
+      },
+      tagIds: eventData.tagIds,
     };
 
     return this.http.patch(`${this.eventsUrl}/${eventId}`, requestBody);

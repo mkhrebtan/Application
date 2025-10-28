@@ -1,6 +1,7 @@
 using API.Extensions;
 using Api.Middlewares.Exceptions;
 using Application;
+using Application.Commands.AI.GenerateResponse;
 using Application.Commands.EventParticipants.Join;
 using Application.Commands.EventParticipants.Leave;
 using Application.Commands.Events.Create;
@@ -14,6 +15,7 @@ using Application.Queries.Events.GetEvent;
 using Application.Queries.Events.GetEventParticipants;
 using Application.Queries.Events.GetEventsList;
 using Application.Queries.Events.GetUserEvents;
+using Application.Queries.Tags.GetTags;
 using Application.Queries.Users.GetUser;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +39,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhostFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:8080")
+        policy.WithOrigins("http://localhost:8080", "http://localhost:4200")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -153,11 +155,10 @@ app.MapPost("/events/{id:guid}/join", async (
 app.MapPost("/events/{id:guid}/leave", async (
         Guid id,
         [FromHeader(Name = "X-Visitor-Id")] Guid? visitorId,
-        LeaveEventCommand request,
         ICommandHandler<LeaveEventCommand> handler,
         CancellationToken cancellationToken) =>
     {
-        request = request with { EventId = id, VisitorId = visitorId, };
+        var request = new LeaveEventCommand(EventId: id, VisitorId: visitorId);
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.NoContent() : result.GetProblem();
     })
@@ -168,12 +169,13 @@ app.MapGet("/events", async (
         string? searchTerm,
         bool? today,
         bool? weekend,
+        Guid[]? tagIds,
         int pageNumber,
         int pageSize,
         IQueryHandler<GetEventsListQuery, EventsListQueryResponse> handler,
         CancellationToken cancellationToken) =>
     {
-        var request = new GetEventsListQuery(visitorId, searchTerm, today, weekend, pageNumber, pageSize);
+        var request = new GetEventsListQuery(visitorId, searchTerm, today, weekend, tagIds, pageNumber, pageSize);
         var result = await handler.Handle(request, cancellationToken);
         return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
     })
@@ -222,5 +224,25 @@ app.MapGet("users/me", async (
     })
     .WithTags("Users")
     .RequireAuthorization();
+
+app.MapGet("tags", async (
+        IQueryHandler<GetTagsQuery, GetTagsQueryResponse> queryHandler) =>
+    {
+        var query = new GetTagsQuery();
+        var result = await queryHandler.Handle(query, CancellationToken.None);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .WithTags("Tags");
+
+app.MapPost("ai/ask", async (
+        GenerateAiResponseCommand request,
+        ICommandHandler<GenerateAiResponseCommand, string> handler,
+        CancellationToken cancellationToken) =>
+    {
+        var result = await handler.Handle(request, cancellationToken);
+        return result.IsSuccess ? Results.Ok(result.Value) : result.GetProblem();
+    })
+    .RequireAuthorization()
+    .WithTags("AI");
 
 await app.RunAsync();

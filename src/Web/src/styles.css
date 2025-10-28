@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "primeicons/primeicons.css";
 
 @theme {
   --animate-fade-in: fade-in 0.3s;
@@ -23,4 +24,8 @@
       opacity: 1;
     }
   }
+}
+
+:root {
+  color-scheme: light;
 }

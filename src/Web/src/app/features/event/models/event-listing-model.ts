@@ -1,4 +1,5 @@
 ﻿import { UUID } from 'node:crypto';
+import { IEventTag } from './event-tag';
 
 export interface RequesterStatus {
   isParticipating: boolean;
@@ -14,4 +15,5 @@ export interface IEventListingModel {
   capacity: number | null;
   participantsCount: number;
   requesterStatus: RequesterStatus;
+  tags: IEventTag[];
 }

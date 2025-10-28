@@ -1,4 +1,5 @@
 ﻿import { UUID } from 'node:crypto';
+import { IEventTag } from './event-tag';
 
 export interface IEventDetails {
   id: UUID;
@@ -11,4 +12,5 @@ export interface IEventDetails {
   isUserParticipating: boolean;
   isUserOrganizer: boolean;
   isPublic: boolean;
+  tags: IEventTag[];
 }
